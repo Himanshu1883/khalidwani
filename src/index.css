@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8CC7A;
+  --gold-dim: rgba(201, 168, 76, 0.14);
+  --ink: #080808;
+  --ink-mid: #111111;
+  --ink-soft: #1C1C1C;
+  --cream: #F4EFE5;
+  --muted: #727268;
+  --muted-light: #9A9A90;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── Custom Cursor ─── */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left 0.18s ease, top 0.18s ease, opacity 0.25s ease;
+}
+
+.cursor-dot.expanded {
+  transform: translate(-50%, -50%) scale(3);
+}
+
+.cursor-ring.hidden {
+  opacity: 0;
+}
+
+/* ─── Hero image shimmer/grain ─── */
+.img-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Reveal animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(44px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.delay-1 { transition-delay: 0.12s; }
+.delay-2 { transition-delay: 0.26s; }
+.delay-3 { transition-delay: 0.40s; }
+
+/* ─── Marquee ─── */
+.marquee-track {
+  display: flex;
+  animation: marqueeAnim 32s linear infinite;
+  width: max-content;
+}
+
+@keyframes marqueeAnim {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Bar fill animation ─── */
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  width: 0;
+  transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Scroll indicator line ─── */
+.scroll-line {
+  width: 34px;
+  height: 1px;
+  background: rgba(201, 168, 76, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gold);
+  animation: slideAnim 2s 2s infinite;
+}
+
+@keyframes slideAnim {
+  0%   { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ─── Hero grid overlay ─── */
+.hero-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* ─── Image fallback SVG background ─── */
+.img-placeholder {
+  background: linear-gradient(135deg, var(--ink-soft) 0%, #222 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Stat counter ─── */
+.stat-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--gold);
+  transition: width 0.4s ease;
+}
+
+.stat-underline:hover::after {
+  width: 50%;
+}
+
+/* ─── Hero animations ─── */
+@keyframes fadeUpHero {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-anim-1 { opacity: 0; animation: fadeUpHero 0.9s 0.4s ease forwards; }
+.hero-anim-2 { opacity: 0; animation: fadeUpHero 0.9s 0.6s ease forwards; }
+.hero-anim-3 { opacity: 0; animation: fadeUpHero 0.9s 0.8s ease forwards; }
+.hero-anim-4 { opacity: 0; animation: fadeUpHero 0.9s 1.0s ease forwards; }
+.hero-anim-5 { opacity: 0; animation: fadeUpHero 0.9s 1.2s ease forwards; }
+
+@keyframes fadeInHero {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.corner-anim { opacity: 0; animation: fadeInHero 1s 1.5s ease forwards; }
+.scroll-anim { opacity: 0; animation: fadeInHero 1s 1.8s ease forwards; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  .cursor-dot, .cursor-ring { display: none; }
+}
