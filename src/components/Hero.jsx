@@ -1,9 +1,8 @@
-import FallbackImage from './FallbackImage'
-import { IMAGES } from '../data/content'
-import { useEffect, useState } from 'react'
+import { useState } from "react";
+import FallbackImage from "./FallbackImage";
 
 export default function Hero() {
-  const [imageError, setImageError] = useState(false)
+  const [imageError, setImageError] = useState(false);
 
   return (
     <section className="relative min-h-screen grid md:grid-cols-[45%_55%] lg:grid-cols-[40%_60%]">
@@ -12,14 +11,14 @@ export default function Hero() {
         {/* Vertical social rail — desktop only - repositioned */}
         <div className="absolute left-5 bottom-24 hidden md:flex flex-col items-center gap-6">
           <span className="w-px h-12 bg-gold/40" />
-          {['Instagram','LinkedIn','YouTube'].map((s) => (
+          {["Instagram", "LinkedIn", "YouTube"].map((s) => (
             <a
               key={s}
-              href={`https://${s.toLowerCase()}.com/${s === 'YouTube' ? '@wanikhalid' : 'khalidwani'}`}
+              href={`https://${s.toLowerCase()}.com/${s === "YouTube" ? "@wanikhalid" : "khalidwani"}`}
               target="_blank"
               rel="noreferrer"
               className="text-[9px] font-medium tracking-[0.22em] uppercase text-cream/60 hover:text-gold transition-colors duration-300 no-underline"
-              style={{ writingMode: 'vertical-rl' }}
+              style={{ writingMode: "vertical-rl" }}
             >
               {s}
             </a>
@@ -35,7 +34,7 @@ export default function Hero() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 70% 60% at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 70%)',
+              "radial-gradient(ellipse 70% 60% at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 70%)",
           }}
         />
 
@@ -45,17 +44,26 @@ export default function Hero() {
             India's Most Demanding Corporate Trainer
           </p>
 
-          <h1 className="hero-anim-2 font-cormorant font-light leading-none tracking-tight text-cream"
-            style={{ fontSize: 'clamp(48px, 8vw, 110px)', letterSpacing: '-0.02em' }}>
-            Redefining<br />
-            <em className="italic text-gold">Leadership.</em><br />
-            Delivering<br />
+          <h1
+            className="hero-anim-2 font-cormorant font-light leading-none tracking-tight text-cream"
+            style={{
+              fontSize: "clamp(48px, 8vw, 110px)",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Redefining
+            <br />
+            <em className="italic text-gold">Leadership.</em>
+            <br />
+            Delivering
+            <br />
             Impact.
           </h1>
 
           <p className="hero-anim-3 mt-6 lg:mt-7 text-sm lg:text-base font-light leading-relaxed text-cream/80 max-w-lg">
-            Recognized among the world's top 10 business consultants — Khalid Wani
-            transforms vision into action, and strategy into scalable, lasting success.
+            Recognized among the world's top 10 business consultants — Khalid
+            Wani transforms vision into action, and strategy into scalable,
+            lasting success.
           </p>
 
           <div className="hero-anim-4 flex gap-4 mt-10 lg:mt-12 flex-wrap">
@@ -82,20 +90,20 @@ export default function Hero() {
       </div>
 
       {/* ── Right photo pane ── */}
-      <div className="relative h-screen overflow-hidden bg-ink-soft">
+      <div className="relative h-screen overflow-hidden">
         {/* Image container */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 ">
           {!imageError ? (
             <img
-              src="/khalidwani5.jpeg"
+              src="/profile.jpg"
               alt="Khalid Wani — Business Consultant"
-              className="w-full h-full object-cover object-left scale-105 hover:scale-100 transition-transform duration-7000"
+              className="w-full h-fit object-cover object-left transition-transform duration-500 ease-in-out hover:scale-105"
               onError={() => setImageError(true)}
               loading="eager"
             />
           ) : (
             <FallbackImage
-              src="/khalidwani1.png"
+              src="/profile.jpg"
               alt="Khalid Wani — Business Consultant"
               className="w-full h-full object-cover object-left"
             />
@@ -106,7 +114,8 @@ export default function Hero() {
         <div
           className="absolute inset-0 pointer-events-none z-5"
           style={{
-            background: 'linear-gradient(105deg, rgba(8,8,8,0.4) 0%, rgba(8,8,8,0.1) 30%, transparent 50%)',
+            background:
+              "linear-gradient(105deg, rgba(8,8,8,0.4) 0%, rgba(8,8,8,0.1) 30%, transparent 50%)",
           }}
         />
 
@@ -114,7 +123,8 @@ export default function Hero() {
         <div
           className="absolute inset-0 pointer-events-none z-10 md:hidden"
           style={{
-            background: 'linear-gradient(to right, rgba(8,8,8,0.8) 0%, rgba(8,8,8,0.4) 50%, transparent 80%)',
+            background:
+              "linear-gradient(to right, rgba(8,8,8,0.8) 0%, rgba(8,8,8,0.4) 50%, transparent 80%)",
           }}
         />
 
@@ -124,12 +134,12 @@ export default function Hero() {
         {/* Gold frame */}
         <div
           className="absolute z-20 pointer-events-none"
-          style={{ inset: '28px', border: '1px solid rgba(201,168,76,0.25)' }}
+          style={{ inset: "28px", border: "1px solid rgba(201,168,76,0.25)" }}
         >
           {/* Bottom label on frame */}
           <span
             className="absolute -bottom-px left-1/2 -translate-x-1/2 text-[8px] font-medium tracking-[0.38em] uppercase text-gold whitespace-nowrap px-5"
-            style={{ background: 'var(--ink-soft)' }}
+            style={{ background: "var(--ink-soft)" }}
           >
             KHALID WANI · KWCG
           </span>
@@ -142,7 +152,7 @@ export default function Hero() {
           </em>
           <strong
             className="block font-cormorant font-light text-gold/20 leading-none"
-            style={{ fontSize: '28px' }}
+            style={{ fontSize: "28px" }}
           >
             KWCG
           </strong>
@@ -153,12 +163,12 @@ export default function Hero() {
       <div
         className="absolute top-0 bottom-0 hidden md:block pointer-events-none z-15"
         style={{
-          left: '45%',
-          width: '1px',
+          left: "45%",
+          width: "1px",
           background:
-            'linear-gradient(to bottom, transparent, rgba(201,168,76,0.4) 25%, rgba(201,168,76,0.4) 75%, transparent)',
+            "linear-gradient(to bottom, transparent, rgba(201,168,76,0.4) 25%, rgba(201,168,76,0.4) 75%, transparent)",
         }}
       />
     </section>
-  )
+  );
 }

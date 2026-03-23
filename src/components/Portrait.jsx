@@ -1,6 +1,6 @@
-import FallbackImage from './FallbackImage'
-import SectionLabel from './SectionLabel'
-import { IMAGES } from '../data/content'
+import { IMAGES } from "../data/content";
+import FallbackImage from "./FallbackImage";
+import SectionLabel from "./SectionLabel";
 
 export default function Portrait() {
   return (
@@ -11,30 +11,31 @@ export default function Portrait() {
         <FallbackImage
           sources={IMAGES.portrait1}
           alt="Khalid Wani"
-          className="absolute left-0 top-0 object-cover object-top"
-          style={{ width: '68%', height: '100%', filter: 'brightness(0.82)' }}
+          className="absolute left-0 top-0 object-cover object-top rounded-xl 
+          transition-transform duration-500 ease-in-out hover:scale-105"
+          style={{ width: "68%", height: "100%", filter: "brightness(0.90)" }}
         />
 
         {/* Secondary image */}
         <FallbackImage
           sources={IMAGES.portrait2}
           alt="Khalid Wani at event"
-          className="absolute right-0 bottom-16 object-cover z-10"
+          className="absolute right-0 bottom-16 object-cover z-10 rounded-xl scale-0.95"
           style={{
-            width: '44%',
-            height: '62%',
-            filter: 'brightness(0.78)',
-            border: '5px solid var(--ink-soft)',
+            width: "35%",
+            height: "58%",
+            filter: "brightness(0.78)",
+            border: "5px solid var(--ink-soft)",
           }}
         />
 
         {/* Gold quote card */}
         <div
           className="absolute right-0 top-0 bg-gold text-ink z-20 px-7 py-6 font-cormorant text-[15px] italic leading-[1.5]"
-          style={{ width: '54%' }}
+          style={{ width: "54%" }}
         >
-          "Business growth is not a destination — it is a discipline practiced daily
-          with unwavering clarity of purpose."
+          "Business growth is not a destination — it is a discipline practiced
+          daily with unwavering clarity of purpose."
         </div>
       </div>
 
@@ -43,20 +44,22 @@ export default function Portrait() {
         <SectionLabel>A Life of Purpose</SectionLabel>
         <h2
           className="font-cormorant font-light text-cream leading-[1.2] mb-6"
-          style={{ fontSize: 'clamp(32px, 3.5vw, 50px)' }}
+          style={{ fontSize: "clamp(32px, 3.5vw, 50px)" }}
         >
-          Shaping India's Next<br />
+          Shaping India's Next
+          <br />
           Generation of Leaders
         </h2>
-        <p className="text-sm font-light leading-[1.9] text-muted mb-5">
-          Khalid Wani's work is deeply intertwined with his mission to create lasting
-          change. His engagement with global startups, multinational companies, and
-          government institutions reflects a drive to make a real, measurable difference.
+        <p className="text-sm font-light leading-[1.9] text-muted mb-5 hover:text-gold transition-colors duration-200">
+          Khalid Wani's work is deeply intertwined with his mission to create
+          lasting change. His engagement with global startups, multinational
+          companies, and government institutions reflects a drive to make a
+          real, measurable difference.
         </p>
-        <p className="text-sm font-light leading-[1.9] text-muted mb-7">
-          He believes in the power of education and mentorship — forging strategic
-          partnerships with leading institutions to shape the next wave of entrepreneurial
-          talent across India and beyond.
+        <p className="text-sm font-light leading-[1.9] text-muted mb-7 hover:text-gold transition-colors duration-200">
+          He believes in the power of education and mentorship — forging
+          strategic partnerships with leading institutions to shape the next
+          wave of entrepreneurial talent across India and beyond.
         </p>
         <a
           href="#contact"
@@ -66,5 +69,5 @@ export default function Portrait() {
         </a>
       </div>
     </section>
-  )
+  );
 }

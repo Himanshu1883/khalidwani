@@ -6,9 +6,10 @@ export default function CTA() {
     >
       <h2
         className="font-cormorant font-light text-ink leading-[1.1] max-w-2xl"
-        style={{ fontSize: 'clamp(34px, 4vw, 62px)' }}
+        style={{ fontSize: "clamp(34px, 4vw, 62px)" }}
       >
-        Ready to Transform<br />
+        Ready to Transform
+        <br />
         Your Business?
       </h2>
       <a
@@ -18,5 +19,5 @@ export default function CTA() {
         Schedule Your Session →
       </a>
     </section>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { FOOTER_LINKS, SOCIAL_LINKS } from '../data/content'
+import { FOOTER_LINKS, SOCIAL_LINKS } from "../data/content";
 
 export default function Footer() {
   return (
@@ -6,10 +6,13 @@ export default function Footer() {
       <div className="grid grid-cols-2 md:grid-cols-[1.8fr_1fr_1fr_1fr] gap-10 md:gap-14 mb-16">
         {/* Brand */}
         <div className="col-span-2 md:col-span-1">
-          <a href="#" className="block font-cormorant text-[22px] tracking-[0.06em] text-cream no-underline mb-4">
+          <a
+            href="#"
+            className="block font-cormorant text-[22px] tracking-[0.06em] text-cream no-underline mb-4"
+          >
             Khalid <span className="text-gold">Wani</span>
           </a>
-          <p className="text-[13px] text-muted leading-[1.85] max-w-[230px]">
+          <p className="text-[13px] text-muted leading-[1.85] max-w-[230px] hover:text-gold transition-colors duration-200">
             Global consultant, investor, and mentor with 20+ years empowering
             entrepreneurs to reach their fullest potential.
           </p>
@@ -26,8 +29,10 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                    rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      link.href.startsWith("http") ? "noreferrer" : undefined
+                    }
                     className="text-[13px] text-muted hover:text-gold transition-colors duration-300 no-underline"
                   >
                     {link.label}
@@ -59,5 +64,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
