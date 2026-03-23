@@ -95,6 +95,14 @@ export const TALKS = [
   },
 ]
 
+export const KHALID_QUOTES = [
+  "If a door shuts, knock louder on the next.",
+  "Your mindset is the only startup that needs no funding.",
+  "Execution beats intention every single time.",
+  "Leaders don't wait for permission to lead.",
+  "Clarity is the most underrated business strategy.",
+]
+
 export const METRICS = [
   { label: 'Business Performance',   pct: '300%', width: 90 },
   { label: 'Leadership Effectiveness', pct: '139%', width: 72 },

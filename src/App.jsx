@@ -15,6 +15,7 @@ import Metrics   from './components/Metrics'
 import Testimonials from './components/Testimonials'
 import CTA       from './components/CTA'
 import Footer    from './components/Footer'
+import Collaborations from './components/Collaborations'
 
 export default function App() {
   // Activate scroll reveal for all .reveal* elements
@@ -36,6 +37,7 @@ export default function App() {
         <Talks />
         <Metrics />
         <Testimonials />
+        {/* <Collaborations /> */}
         <CTA />
       </main>
 
