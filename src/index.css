@@ -222,3 +222,132 @@ body {
   body { cursor: auto; }
   .cursor-dot, .cursor-ring { display: none; }
 }
+
+
+
+/* Add to your global CSS file (e.g., index.css or App.css) */
+
+/* KHAD Font - You'll need to import or define this */
+@font-face {
+  font-family: 'KHAD';
+  src: url('/fonts/KHAD-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'KHAD';
+  src: url('/fonts/KHAD-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'KHAD';
+  src: url('/fonts/KHAD-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* INTER Font */
+@font-face {
+  font-family: 'INTER';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'INTER';
+  src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Custom utility classes */
+.font-khad {
+  font-family: 'KHAD', sans-serif;
+}
+
+.font-inter {
+  font-family: 'INTER', sans-serif;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000515;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2EC8C0;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2EC8C0/80;
+}
+
+/* Animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Marquee animation (if needed for future use) */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* Hover effects */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(46, 200, 192, 0.3);
+}
+
+/* Custom cursor (optional) */
+.custom-cursor {
+  cursor: none;
+}
+
+/* Reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
