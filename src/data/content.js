@@ -180,9 +180,9 @@ export const FOOTER_LINKS = {
 // Image sources with fallback chains
 export const IMAGES = {
   hero: [
-    "https://khalidwani.com/wp-content/uploads/2025/07/Screenshot-2025-07-04-at-12.52.14 AM-733x1024.png",
-    "https://khalidwani.com/wp-content/uploads/2025/07/3-724x1024.png",
-    "https://khalidwani.com/wp-content/uploads/2025/07/2-724x1024.png",
+    "/profile2.jpg",
+    // "https://khalidwani.com/wp-content/uploads/2025/07/3-724x1024.png",
+    // "https://khalidwani.com/wp-content/uploads/2025/07/2-724x1024.png",
   ],
   about1: [
     "https://khalidwani.com/wp-content/uploads/2025/07/ContactUs-Image.png",
