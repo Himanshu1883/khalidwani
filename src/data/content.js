@@ -1,9 +1,8 @@
 export const NAV_LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Talks", href: "#talks" },
-  { label: "Results", href: "#results" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Services", to: "/services" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export const SOCIAL_LINKS = [
@@ -101,7 +100,7 @@ export const KHALID_QUOTES = [
   "Execution beats intention every single time.",
   "Leaders don't wait for permission to lead.",
   "Clarity is the most underrated business strategy.",
-]
+];
 
 export const METRICS = [
   { label: "Business Performance", pct: "300%", width: 90 },
