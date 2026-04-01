@@ -29,9 +29,9 @@ export default function Portrait() {
           }}
         />
 
-        {/* Gold quote card */}
+        {/* [#B0E4CC] quote card */}
         <div
-          className="absolute right-0 top-0 bg-gold text-ink z-20 px-7 py-6 font-cormorant text-[15px] italic leading-[1.5]"
+          className="absolute right-0 top-0 bg-[#B0E4CC]  text-ink z-20 px-7 py-6 font-cormorant text-[15px] italic leading-[1.5]"
           style={{ width: "54%" }}
         >
           "Business growth is not a destination — it is a discipline practiced
@@ -50,20 +50,20 @@ export default function Portrait() {
           <br />
           Generation of Leaders
         </h2>
-        <p className="text-sm font-light leading-[1.9] text-muted mb-5 hover:text-gold transition-colors duration-200">
+        <p className="text-sm font-light leading-[1.9] text-muted mb-5 hover:text-[#B0E4CC] transition-colors duration-200">
           Khalid Wani's work is deeply intertwined with his mission to create
           lasting change. His engagement with global startups, multinational
           companies, and government institutions reflects a drive to make a
           real, measurable difference.
         </p>
-        <p className="text-sm font-light leading-[1.9] text-muted mb-7 hover:text-gold transition-colors duration-200">
+        <p className="text-sm font-light leading-[1.9] text-muted mb-7 hover:text-[#B0E4CC] transition-colors duration-200">
           He believes in the power of education and mentorship — forging
           strategic partnerships with leading institutions to shape the next
           wave of entrepreneurial talent across India and beyond.
         </p>
         <a
           href="#contact"
-          className="inline-block text-[10px] font-medium tracking-[0.2em] uppercase text-ink bg-gold px-10 py-4 no-underline hover:bg-gold-light transition-all duration-300 hover:-translate-y-0.5"
+          className="inline-block text-[10px] font-medium tracking-[0.2em] uppercase text-ink bg-[#B0E4CC]  px-10 py-4 no-underline hover:bg-[#B0E4CC] -light transition-all duration-300 hover:-translate-y-0.5"
         >
           Invite Khalid to Speak
         </a>

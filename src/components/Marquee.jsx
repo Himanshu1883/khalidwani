@@ -1,22 +1,45 @@
-import { MARQUEE_ITEMS } from '../data/content'
+import { MARQUEE_ITEMS } from "../data/content";
 
 export default function Marquee() {
-  // Duplicate for seamless loop
-  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
+  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
   return (
-    <div className="overflow-hidden py-[18px] bg-ink-mid border-b border-gold/[0.07]">
-      <div className="marquee-track">
-        {items.map((item, i) => (
+    <div className="relative overflow-hidden border-y border-white/8 bg-[#050d18] py-5">
+      {/* Gradient overlay left/right */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[#050d18] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#050d18] to-transparent" />
+
+      {/* Marquee track */}
+      <div className="animate-marquee whitespace-nowrap flex gap-12 md:gap-16">
+        {items.map((item, index) => (
           <span
-            key={i}
-            className="font-cormorant text-[18px] italic text-gold/[0.28] whitespace-nowrap px-14 inline-flex items-center gap-14"
+            key={index}
+            className="inline-flex items-center gap-4 whitespace-nowrap px-4 md:px-8 font-cormorant text-[24px] md:text-[30px] italic tracking-[0.02em] text-[#f4efe5]/80 transition-transform duration-300 hover:scale-110 hover:text-[#B0E4CC]"
           >
             {item}
-            <span className="text-[7px] not-italic text-gold/[0.22]">◆</span>
+            <span className="font-sans text-[10px] font-semibold uppercase not-italic tracking-[0.32em] text-[#8dc0ff]/70">
+              /
+            </span>
           </span>
         ))}
       </div>
+
+      {/* Tailwind animation */}
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          display: inline-flex;
+          gap: 4rem;
+          animation: marquee 25s linear infinite;
+        }
+      `}</style>
     </div>
-  )
+  );
 }

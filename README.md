@@ -41,7 +41,7 @@ src/
 │   ├── Navbar.jsx         # Sticky navigation
 │   ├── Portrait.jsx       # Portrait + purpose section
 │   ├── QuoteBreak.jsx     # Full-bleed photo with quote
-│   ├── SectionLabel.jsx   # Reusable gold section label
+│   ├── SectionLabel.jsx   # Reusable [#B0E4CC] section label
 │   ├── Services.jsx       # 6-card services grid
 │   ├── Stats.jsx          # Animated stat counters
 │   ├── Talks.jsx          # TEDx / keynote video cards

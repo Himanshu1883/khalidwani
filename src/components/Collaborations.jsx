@@ -31,7 +31,7 @@ export default function Collaborations() {
             <span style={{ color: 'rgba(255,255,255,0.55)' }}>Or Companies</span>
           </h2>
 
-          {/* Gold divider */}
+          {/* [#B0E4CC] divider */}
           <div
             className="mb-6"
             style={{ width: '40px', height: '1px', background: 'rgba(201,168,76,0.5)' }}
@@ -46,7 +46,7 @@ export default function Collaborations() {
 
           {/* CTA button */}
           <button
-            className="flex items-center gap-3 text-[11px] font-medium tracking-[0.2em] uppercase text-cream transition-all duration-300 hover:text-gold"
+            className="flex items-center gap-3 text-[11px] font-medium tracking-[0.2em] uppercase text-cream transition-all duration-300 hover:text-[#B0E4CC]"
             style={{
               border: '1px solid rgba(255,255,255,0.2)',
               padding: '14px 28px',

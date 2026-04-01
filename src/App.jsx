@@ -1,47 +1,30 @@
-import { useEffect } from 'react'
-import { useScrollReveal } from './hooks/useScrollReveal'
+import { Route, Routes } from "react-router-dom";
 
-import Cursor    from './components/Cursor'
-import Navbar    from './components/Navbar'
-import Hero      from './components/Hero'
-import Stats     from './components/Stats'
-import Marquee   from './components/Marquee'
-import About     from './components/About'
-import Services  from './components/Services'
-import QuoteBreak from './components/QuoteBreak'
-import Portrait  from './components/Portrait'
-import Talks     from './components/Talks'
-import Metrics   from './components/Metrics'
-import Testimonials from './components/Testimonials'
-import CTA       from './components/CTA'
-import Footer    from './components/Footer'
-import Collaborations from './components/Collaborations'
+import Cursor from "./components/Cursor";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+
+import About from "./pages/about";
+import Contact from "./pages/Contact";
+import Home from "./pages/Home";
+import Services from "./pages/Services";
+import useScrollToTop from './hooks/useScrollToTop';
 
 export default function App() {
-  // Activate scroll reveal for all .reveal* elements
-  useScrollReveal()
-
+  useScrollToTop();
   return (
     <>
       <Cursor />
       <Navbar />
 
-      <main>
-        <Hero />
-        <Stats />
-        <Marquee />
-        <About />
-        <Services />
-        <QuoteBreak />
-        <Portrait />
-        <Talks />
-        <Metrics />
-        <Testimonials />
-        {/* <Collaborations /> */}
-        <CTA />
-      </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
 
       <Footer />
     </>
-  )
+  );
 }

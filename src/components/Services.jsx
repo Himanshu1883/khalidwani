@@ -1,74 +1,118 @@
-import { SERVICES } from '../data/content'
-import SectionLabel from './SectionLabel'
+import { SERVICES } from "../data/content";
+import SectionLabel from "./SectionLabel";
+
+const SERVICE_BACKGROUNDS = [
+  "/khalidwani1.png",
+  "/khalidwani2.jpg",
+  "/profile2.jpg",
+  "/khalidwani5.jpeg",
+  "/profile.jpg",
+  "/quote2.jpg",
+];
+
+const IMAGE_POSITIONS = [
+  "object-[62%_center]",
+  "object-[70%_center]",
+  "object-[52%_top]",
+  "object-[68%_center]",
+  "object-[62%_center]",
+  "object-[60%_center]",
+];
 
 export default function Services() {
   return (
-    <section id="services" className="bg-ink-mid px-8 md:px-16 py-28">
-      {/* Header */}
-      <div className="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
-        <div>
-          <SectionLabel>What Khalid Offers</SectionLabel>
-          <h2
-            className="font-cormorant font-light text-cream leading-[1.1]"
-            style={{ fontSize: 'clamp(36px, 4vw, 60px)' }}
-          >
-            Master Every<br />
-            Business Challenge
-          </h2>
-        </div>
-        <a
-          href="#contact"
-          className="self-start text-[10px] font-medium tracking-[0.2em] uppercase text-gold border border-gold/35 px-10 py-4 no-underline hover:border-gold transition-all duration-300"
-        >
-          Book Consultation
-        </a>
-      </div>
+    <section
+      id="services"
+      className="bg-[#07111f] px-6 py-24 md:px-10 lg:px-16 lg:py-28"
+    >
+      <div className="mx-auto max-w-[1440px]">
+        <div className="mb-14 flex flex-col gap-8 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
+          <div className="reveal max-w-3xl">
+            <SectionLabel>What Khalid Offers</SectionLabel>
+            <h2
+              className="font-cormorant font-light leading-[0.96] text-[#f4efe5]"
+              style={{ fontSize: "clamp(38px, 4.8vw, 72px)" }}
+            >
+              Master every
+              <br />
+              business challenge.
+            </h2>
+          </div>
 
-      {/* Grid */}
-      <div
-        className="grid grid-cols-1 md:grid-cols-3 gap-px"
-        style={{ background: 'rgba(201,168,76,0.05)' }}
-      >
-        {SERVICES.map((svc, i) => (
-          <ServiceCard key={svc.number} svc={svc} delay={i % 3} />
-        ))}
+          <div className="reveal-right delay-1 max-w-2xl lg:text-right">
+            <p className="text-sm leading-[1.95] text-white/62 md:text-[15px]">
+              Strategic support across training, investing, coaching, speaking,
+              consulting, and media, presented in a darker editorial system
+              that stays aligned with the hero while keeping every card clear.
+            </p>
+            <a
+              href="#contact"
+              className="mt-6 inline-flex h-14 items-center justify-center rounded-full bg-b  px-8 text-[10px] font-bold uppercase tracking-[0.24em] text-[#07111f] transition duration-300 hover:-translate-y-0.5 hover:bg-blue-600 -light"
+            >
+              Book Consultation
+            </a>
+          </div>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {SERVICES.map((service, index) => (
+            <ServiceCard
+              key={service.number}
+              service={service}
+              image={SERVICE_BACKGROUNDS[index % SERVICE_BACKGROUNDS.length]}
+              imagePosition={
+                IMAGE_POSITIONS[index % IMAGE_POSITIONS.length]
+              }
+              delay={index % 3}
+            />
+          ))}
+        </div>
       </div>
     </section>
-  )
+  );
 }
 
-function ServiceCard({ svc, delay }) {
-  const delayClass = delay === 0 ? 'delay-1' : delay === 1 ? 'delay-2' : 'delay-3'
+function ServiceCard({ service, image, imagePosition, delay }) {
+  const delayClass =
+    delay === 0 ? "delay-1" : delay === 1 ? "delay-2" : "delay-3";
 
   return (
-    <div
-      className={`reveal ${delayClass} group relative overflow-hidden bg-ink-mid px-11 py-12 transition-colors duration-500 hover:bg-gold/[0.03] cursor-default`}
+    <article
+      className={`reveal ${delayClass} group relative min-h-[340px] overflow-hidden rounded-[28px] border border-white/10 bg-[#091321] transition duration-500 hover:-translate-y-1 hover:border-[#8dc0ff]/35`}
     >
-      {/* Background number */}
-      <span
-        className="absolute top-4 right-6 font-cormorant font-light leading-none pointer-events-none select-none"
-        style={{ fontSize: '68px', color: 'rgba(201,168,76,0.07)' }}
-      >
-        {svc.number}
-      </span>
+      <img
+        src={image}
+        alt={service.title}
+        className={`absolute inset-0 h-full w-full object-cover ${imagePosition} transition duration-700 group-hover:scale-[1.04]`}
+      />
 
-      {/* Bottom reveal line */}
-      <div className="absolute bottom-0 left-0 h-px w-0 bg-gold transition-all duration-500 group-hover:w-full" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,8,16,0.96)_0%,rgba(3,8,16,0.92)_42%,rgba(3,8,16,0.58)_68%,rgba(3,8,16,0.28)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,16,0.08)_0%,rgba(3,8,16,0.18)_38%,rgba(3,8,16,0.42)_100%)]" />
+      <div className="absolute left-0 top-0 bottom-0 w-[58%] bg-[#020814]/24 backdrop-blur-[4px]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#8dc0ff]/60 to-transparent opacity-80" />
 
-      {/* Icon */}
-      <div
-        className="w-10 h-10 flex items-center justify-center text-[15px] mb-7 transition-colors duration-300 group-hover:border-gold"
-        style={{ border: '1px solid rgba(201,168,76,0.24)' }}
-      >
-        {svc.icon}
+      <div className="relative z-10 flex h-full flex-col justify-between p-6 md:p-7">
+        <div className="flex items-start justify-between gap-4">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.04] text-sm text-[#B0E4CC] backdrop-blur-xl">
+            {service.icon}
+          </div>
+          <span className="font-cormorant text-[28px] leading-none text-white/80">
+            {service.number}
+          </span>
+        </div>
+
+        <div className="max-w-[62%]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.26em] text-[#B0E4CC]">
+            Signature Service
+          </p>
+          <h3 className="font-cormorant text-[32px] leading-[0.98] text-[#f4efe5]">
+            {service.title}
+          </h3>
+          <p className="mt-4 text-[15px] leading-[1.85] text-white/88">
+            {service.desc}
+          </p>
+        </div>
       </div>
-
-      <h3 className="font-cormorant font-normal text-cream text-[26px] mb-3 leading-tight">
-        {svc.title}
-      </h3>
-      <p className="text-[13px] leading-[1.85] text-muted">
-        {svc.desc}
-      </p>
-    </div>
-  )
+    </article>
+  );
 }
