@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 export default function Testimonials() {
   // Define image paths with proper error handling
-  const khalidImage = "testmonial.jpg" // Make sure this file exists in your public folder
+  const khalidImage = "large.JPG" // Make sure this file exists in your public folder
   const fallbackImage = "testmonial.jpg"
   
   const [imageErrors, setImageErrors] = useState({})
