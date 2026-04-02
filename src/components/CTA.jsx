@@ -38,6 +38,10 @@ export default function CTA() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const handleButtonClick = () => {
+    window.location.href = "/contact"; // navigate to contact page
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -48,8 +52,6 @@ export default function CTA() {
         backgroundSize: "200% 200%",
         animation: "gradientShift 5s ease infinite",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -184,36 +186,30 @@ export default function CTA() {
           isVisible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
         }`}
       >
-        <a
-          href="mailto:connect@khalidwani.com"
-          className="group relative inline-flex items-center justify-center px-8 sm:px-11 py-4 sm:py-5 bg-ink text-cream font-medium uppercase tracking-[0.2em] text-[10px] sm:text-[11px] overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+        <button
+          onClick={handleButtonClick}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`group relative inline-flex items-center justify-center px-8 sm:px-11 py-4 sm:py-5 bg-ink text-cream font-medium uppercase tracking-[0.2em] text-[10px] sm:text-[11px] overflow-hidden transition-transform duration-300`}
           style={{
             borderRadius: "4px",
             boxShadow: isHovered ? "0 20px 35px -10px rgba(0,0,0,0.3)" : "none",
+            transform: isHovered ? "scale(1.05)" : "scale(1)",
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         >
           {/* Button Background Animation */}
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink-soft to-ink animate-gradient-x opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
+
           {/* Button Content */}
           <span className="relative z-10 flex items-center gap-2">
             Schedule Your Session
             <svg
-              className={`w-4 h-4 transition-all duration-300 ${
-                isHovered ? "translate-x-1" : ""
-              }`}
+              className={`w-4 h-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </span>
 
@@ -226,7 +222,7 @@ export default function CTA() {
               animation: "ripple 1s ease-out",
             }}
           />
-        </a>
+        </button>
 
         {/* Additional Info */}
         <p className="text-center mt-3 text-ink/50 text-[8px] sm:text-[9px] uppercase tracking-wider">

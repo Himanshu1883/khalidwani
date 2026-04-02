@@ -174,11 +174,11 @@ export default function Testimonials() {
               alt="Khalid Wani"
               className="w-full h-full object-cover object-top"
               onError={() => handleImageError('desktop')}
-              style={{
-                filter: 'brightness(0.68) saturate(0.45)',
-                maskImage: 'linear-gradient(to bottom, black 55%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent 100%)',
-              }}
+              // style={{
+              //   // filter: 'brightness(0.68) saturate(0.45)',
+              //   maskImage: 'linear-gradient(to bottom, black 55%, transparent 100%)',
+              //   WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent 100%)',
+              // }}
             />
             <div
               className="absolute bottom-0 left-0 right-0 p-6"
