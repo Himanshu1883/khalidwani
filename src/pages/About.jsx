@@ -241,7 +241,7 @@ const About = () => {
                         onError={(e) => {
                           e.target.src = image.fallback;
                         }}
-                        className={`w-full h-full object-cover object-[center_9%] ${image.position}`}
+                        className={`w-full h-full object-cover object-[center_30%] ${image.position}`}
                       />
                     </motion.div>
                   ))}
@@ -250,7 +250,7 @@ const About = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent" />
                   
                   {/* Slider Controls */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                  {/* <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                     {heroImages.map((_, index) => (
                       <button
                         key={index}
@@ -266,12 +266,12 @@ const About = () => {
                     >
                       {isAutoPlaying ? <FaPause className="text-white/70 text-[8px]" /> : <FaPlay className="text-white/70 text-[8px]" />}
                     </button>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Floating Info Card */}
-                <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md rounded-xl p-3 border border-white/20">
-                  <div className="flex items-center justify-between">
+                <div className="absolute bottom-0 left-4 right-1 bg-black/60 backdrop-blur-md rounded-xl p-3 border border-white/20">
+                  <div className="flex items-center justify-center gap-3">
                     <div>
                       <p className="text-[#B0E4CC] text-[10px] font-semibold uppercase tracking-wider">Global Leader & Mentor</p>
                       <p className="text-white text-xs font-light">Transforming businesses & lives worldwide</p>
@@ -412,7 +412,7 @@ const About = () => {
             src="/wani2.JPG"
             alt="Khalid Wani Background"
             className="w-full h-full object-cover object-center"
-            style={{ filter: "brightness(0.4)" }}
+            style={{ filter: "brightness(0.6)" }}
             onError={(e) => {
               e.target.style.display = "none";
             }}
