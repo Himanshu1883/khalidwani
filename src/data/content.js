@@ -159,15 +159,9 @@ export const FOOTER_LINKS = {
     { label: "Services", href: "#services" },
     { label: "Talks", href: "#talks" },
     { label: "Testimonials", href: "#results" },
-    { label: "Contact", href: "#contact" },
+    { label: "Contact", href: "/contact#contact-form" },
   ],
-  Offerings: [
-    { label: "Courses", href: "#" },
-    { label: "Podcast", href: "#" },
-    { label: "Keynotes", href: "#" },
-    { label: "Mentorship", href: "#" },
-    { label: "Media Kit", href: "#" },
-  ],
+  
   Follow: [
     { label: "Instagram", href: "https://instagram.com/khalidwani" },
     { label: "YouTube", href: "https://youtube.com/@wanikhalid" },

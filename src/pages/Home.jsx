@@ -1,6 +1,6 @@
 import About from "../components/About";
 import BrandPartners from "../components/BrandPartner";
-import UltimateCollaboration from "../components/Collaboration";
+import UltimateCollaboration from "../components/Collaborations";
 import ConsultedFor from "../components/Constulted";
 import CTA from "../components/CTA";
 import Hero from "../components/Hero";

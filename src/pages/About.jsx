@@ -108,6 +108,22 @@ const About = () => {
     }
   };
 
+   const handleInviteToSpeak = () => {
+    // Navigate to contact page with hash
+    navigate("/contact#contact-form");
+    
+    // Small delay to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        contactForm.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 300);
+  };
+
   const stats = [
     { number: "20+", label: "Years of Leadership", icon: FaChartLine },
     { number: "100+", label: "Global Keynotes", icon: FaGlobe },
@@ -116,7 +132,7 @@ const About = () => {
   ];
 
   const achievements = [
-    { title: "40under40 Honoree", description: "Recognized as one of India's most influential young leaders", icon: FaTrophy },
+    { title: "40 under 40 Honoree", description: "Recognized as one of India's most influential young leaders", icon: FaTrophy },
     { title: "Strategic Investor", description: "Invested in 50+ startups across emerging technologies", icon: FaRocket },
     { title: "Global Mentor", description: "Mentored 3,00,000+ students across premier institutions", icon: FaGraduationCap },
     { title: "Capital Architect", description: "Steering ten-figure asset pool with strategic foresight", icon: FaLandmark }
@@ -241,7 +257,7 @@ const About = () => {
                         onError={(e) => {
                           e.target.src = image.fallback;
                         }}
-                        className={`w-full h-full object-cover object-[center_30%] ${image.position}`}
+                        className={`w-full h-full object-cover object-[center_9%] ${image.position}`}
                       />
                     </motion.div>
                   ))}
@@ -603,7 +619,7 @@ const About = () => {
                 Email: Info@khalidwani.com
               </a>
               <button
-  onClick={() => navigate('/contact')}
+   onClick={handleInviteToSpeak}
   className="group inline-flex items-center justify-center gap-2 px-8 py-3 border border-[#B0E4CC]/40 text-[#B0E4CC] text-[10px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#B0E4CC] hover:bg-[#B0E4CC]/5 transition-all duration-300 hover:-translate-y-1"
 >
   <FaExternalLinkAlt className="text-sm" />

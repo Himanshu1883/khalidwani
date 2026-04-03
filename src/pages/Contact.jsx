@@ -1,4 +1,3 @@
-// contact.jsx
 import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
@@ -51,6 +50,7 @@ const Contact = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
+  const contactFormRef = useRef(null);
 
   const heroImages = [
     { src: "/quote1.jpg", alt: "Khalid Wani Speaking" },
@@ -60,10 +60,24 @@ const Contact = () => {
   ];
 
   // WhatsApp number (without + or spaces)
-  const WHATSAPP_NUMBER = "919919069060";
+  const WHATSAPP_NUMBER = "919910609060";
   
   // Email for speaking engagements
   const SPEAKING_EMAIL = "speaking@khalidwani.com";
+
+  // Scroll to contact form when URL has #contact-form hash
+  useEffect(() => {
+    if (window.location.hash === '#contact-form') {
+      setTimeout(() => {
+        if (contactFormRef.current) {
+          contactFormRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 300);
+    }
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -143,7 +157,17 @@ ${formData.message}
     }, 1000);
   };
 
-  // Function to open Gmail with pre-filled speaking engagement email
+  // Function to scroll to contact form
+  const scrollToContactForm = () => {
+    if (contactFormRef.current) {
+      contactFormRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
+  // Function to open Gmail with pre-filled speaking engagement email and scroll to form
   const openSpeakingEmail = () => {
     const subject = encodeURIComponent("Speaking Engagement Request - Khalid Wani");
     const body = encodeURIComponent(`
@@ -170,6 +194,11 @@ Best regards,
     `);
     
     window.location.href = `mailto:${SPEAKING_EMAIL}?subject=${subject}&body=${body}`;
+    
+    // Also scroll to contact form as backup
+    setTimeout(() => {
+      scrollToContactForm();
+    }, 100);
   };
 
   const fadeInUp = {
@@ -261,7 +290,7 @@ Best regards,
           </div>
         </motion.div>
       </section>
-{/* hhfhcommit */}
+
       {/* Contact Methods Grid */}
       <section className="py-24 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
@@ -289,8 +318,8 @@ Best regards,
         </div>
       </section>
 
-      {/* Main Contact Form with Image Gallery */}
-      <section className="py-12 px-4 md:px-8 lg:px-16">
+      {/* Main Contact Form with Image Gallery - Added ID for scrolling */}
+      <section id="contact-form" ref={contactFormRef} className="py-12 px-4 md:px-8 lg:px-16 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
@@ -320,22 +349,22 @@ Best regards,
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-gray-300 text-sm block mb-2">Name *</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC]" placeholder="Your name" />
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Your name" />
                   </div>
                   <div>
                     <label className="text-gray-300 text-sm block mb-2">Email *</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC]" placeholder="your@email.com" />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="your@email.com" />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-gray-300 text-sm block mb-2">Phone *</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC]" placeholder="Your phone number" />
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Your phone number" />
                   </div>
                   <div>
                     <label className="text-gray-300 text-sm block mb-2">Inquiry Type *</label>
-                    <select name="eventType" value={formData.eventType} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC]">
+                    <select name="eventType" value={formData.eventType} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors">
                       <option value="general">General Inquiry</option>
                       <option value="speaking">Speaking Engagement</option>
                       <option value="mentorship">Mentorship Request</option>
@@ -348,12 +377,12 @@ Best regards,
                 
                 <div>
                   <label className="text-gray-300 text-sm block mb-2">Subject</label>
-                  <input type="text" name="subject" value={formData.subject} onChange={handleChange} className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC]" placeholder="Brief subject" />
+                  <input type="text" name="subject" value={formData.subject} onChange={handleChange} className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Brief subject" />
                 </div>
                 
                 <div>
                   <label className="text-gray-300 text-sm block mb-2">Message *</label>
-                  <textarea name="message" value={formData.message} onChange={handleChange} required rows="4" className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] resize-none" placeholder="Tell us about your inquiry..." />
+                  <textarea name="message" value={formData.message} onChange={handleChange} required rows="4" className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors resize-none" placeholder="Tell us about your inquiry..." />
                 </div>
                 
                 <button type="submit" disabled={formStatus.loading} className="w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-[11px] font-medium tracking-[0.2em] uppercase py-3 rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
@@ -413,7 +442,7 @@ Best regards,
                 <h4 className="text-white font-semibold text-sm mb-2">Direct WhatsApp Contact</h4>
                 <p className="text-gray-400 text-xs mb-3">For immediate assistance, message us directly</p>
                 <a 
-                  href="https://wa.me/919919069060" 
+                  href="https://wa.me/919910609060" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white text-[10px] font-semibold uppercase tracking-wider rounded-lg hover:opacity-90 transition"
@@ -439,7 +468,7 @@ Best regards,
         </div>
       </section>
 
-      {/* CTA Section - Updated with Gmail opening function */}
+      {/* CTA Section */}
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -453,7 +482,7 @@ Best regards,
           <h2 className="text-white font-cormorant text-3xl md:text-4xl font-light mb-4">Book Khalid Wani for Your Event</h2>
           <p className="text-gray-400 text-sm mb-8">With 100+ global keynotes delivered at prestigious institutions, bring world-class insights to your next event.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* Request Speaking Engagement - Opens Gmail */}
+            {/* Request Speaking Engagement - Opens Gmail AND scrolls to form */}
             <button
               onClick={openSpeakingEmail}
               className="inline-flex items-center gap-2 px-8 py-3 bg-[#B0E4CC] text-[#06070a] text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:bg-[#B0E4CC]/90 transition hover:-translate-y-1"
@@ -461,15 +490,13 @@ Best regards,
               <FaEnvelope /> Request Speaking Engagement
             </button>
             
-            {/* WhatsApp Inquiry */}
-            <a
-              href="https://wa.me/919919069060"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* WhatsApp Inquiry - Scrolls to form */}
+            <button
+              onClick={scrollToContactForm}
               className="inline-flex items-center gap-2 px-8 py-3 border border-[#B0E4CC]/40 text-[#B0E4CC] text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#B0E4CC] hover:bg-[#B0E4CC]/5 transition hover:-translate-y-1"
             >
               <FaWhatsapp /> WhatsApp Inquiry
-            </a>
+            </button>
           </div>
         </motion.div>
       </section>

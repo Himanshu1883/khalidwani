@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { METRICS } from "../data/content";
 import { useOnceVisible } from "../hooks/useScrollReveal";
 import SectionLabel from "./SectionLabel";
@@ -6,33 +7,41 @@ import SectionLabel from "./SectionLabel";
 export default function Metrics() {
   const [animate, setAnimate] = useState(false);
   const barsRef = useOnceVisible(() => setAnimate(true));
+  const navigate = useNavigate();
+
+  const handleBookConsultation = () => {
+    // Navigate to contact page with hash
+    navigate("/contact#contact-form");
+    
+    // Small delay to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        contactForm.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 300);
+  };
 
   return (
     <section
       id="results"
       className="relative overflow-hidden bg-[#05060a] px-4 sm:px-6 md:px-8 lg:px-16 py-16 sm:py-20 md:py-24 lg:py-28"
     >
-      {/* ================== NEW BACKGROUND IMAGE SYSTEM ================== */}
+      {/* ================== BACKGROUND IMAGE SYSTEM ================== */}
       <div className="absolute inset-0 pointer-events-none">
 
         {/* MAIN IMAGE */}
         <img
-          src="/quote1.jpg"  // 👉 put image in public/
+          src="/quote1.jpg"
           alt="background"
           className="w-full h-full object-cover object-[center_10%] scale-110 opacity-40"
         />
 
-        {/* DARK OVERLAY */}
-        {/* <div className="absolute inset-0 bg-black/75" /> */}
-
-        {/* DEPTH GRADIENT */}
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90" /> */}
-
         {/* SIDE FADE (premium look) */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#05060a] via-transparent to-[#05060a]" />
-
-        {/* CENTER LIGHT FOCUS */}
-        {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(176,228,204,0.15),transparent_60%)]" /> */}
 
         {/* EXISTING EFFECTS (kept) */}
         <div className="absolute top-0 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#B0E4CC]/5 blur-[120px] animate-pulse" />
@@ -42,7 +51,7 @@ export default function Metrics() {
 
       </div>
 
-      {/* ================== CONTENT (UNCHANGED) ================== */}
+      {/* ================== CONTENT ================== */}
       <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
         
         {/* Left Side */}
@@ -77,16 +86,19 @@ export default function Metrics() {
           </p>
 
           <div className="pt-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.2em] uppercase text-ink bg-[#B0E4CC] px-8 py-4 hover:scale-105 transition"
+            <button
+              onClick={handleBookConsultation}
+              className="inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.2em] uppercase text-[#07111f] bg-[#B0E4CC] px-8 py-4 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-[#B0E4CC]/30"
             >
-              Book Free Consultation →
-            </a>
+              Book Free Consultation
+              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        {/* Right Side */}
+        {/* Right Side - Metrics Bars */}
         <div ref={barsRef} className="reveal-right space-y-8 sm:space-y-10">
           {METRICS.map((m, index) => (
             <MetricBar key={m.label} metric={m} animate={animate} />
@@ -129,15 +141,15 @@ function MetricBar({ metric, animate }) {
     <div>
       <div className="flex justify-between mb-2">
         <span className="text-sm text-white">{metric.label}</span>
-        <span className="text-lg text-[#B0E4CC]">
+        <span className="text-lg text-[#B0E4CC] font-semibold">
           {animate ? count : 0}
           {isPercentage ? "%" : ""}
         </span>
       </div>
 
-      <div className="h-[2px] bg-white/10">
+      <div className="h-[2px] bg-white/10 rounded-full overflow-hidden">
         <div
-          className="h-full bg-[#B0E4CC] transition-all duration-1000"
+          className="h-full bg-gradient-to-r from-[#B0E4CC] to-[#8dc0ff] rounded-full transition-all duration-1000 ease-out"
           style={{ width: animate ? `${metric.width}%` : "0%" }}
         />
       </div>
