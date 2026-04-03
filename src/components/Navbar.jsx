@@ -99,7 +99,7 @@ export default function Navbar() {
                   }` 
                 }
               >
-                {({ isActive }) => (
+                {({ isActive }) => ( 
                   <>
                     {link.label}
                     <span
