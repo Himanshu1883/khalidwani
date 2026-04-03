@@ -1,4 +1,4 @@
-// about.jsx - Updated Mentorship Section
+// about.jsx - Fixed version without FallbackImage dependency
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useAnimation } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -21,9 +21,19 @@ import {
   FaInstagram,
   FaTwitter,
   FaYoutube,
-  FaSync
+  FaPlay,
+  FaPause,
+  FaArrowRight
 } from 'react-icons/fa';
-import { KHALID_QUOTES } from '../data/content'; // Adjust the import path as needed
+import { KHALID_QUOTES } from '../data/content';
+
+// Image placeholder function
+const getImageUrl = (imagePath, fallback) => {
+  if (imagePath && imagePath !== "") {
+    return imagePath;
+  }
+  return fallback || "https://via.placeholder.com/800x800/2EC8C0/FFFFFF?text=Khalid+Wani";
+};
 
 const About = () => {
   const navigate = useNavigate();
@@ -31,10 +41,17 @@ const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
   
-  // State for random quote
-   // State for random quote
   const [currentQuote, setCurrentQuote] = useState('');
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const [activeImage, setActiveImage] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const heroImages = [
+    { src: "/front.jpg", alt: "Khalid Wani Leadership", position: "object-center", fallback: "/api/placeholder/800/800" },
+    { src: "/about2.jpg", alt: "Khalid Wani Portrait", position: "object-top", fallback: "/api/placeholder/800/800" },
+    { src: "/about1.JPG", alt: "Khalid Wani Speaking", position: "object-center", fallback: "/api/placeholder/800/800" },
+    { src: "/khalidwani5.jpeg", alt: "Khalid Wani Mentoring", position: "object-center", fallback: "/api/placeholder/800/800" },
+  ];
 
   useEffect(() => {
     if (isInView) {
@@ -42,14 +59,12 @@ const About = () => {
     }
   }, [controls, isInView]);
 
-  // Initialize random quote
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * KHALID_QUOTES.length);
     setCurrentQuote(KHALID_QUOTES[randomIndex]);
     setQuoteIndex(randomIndex);
   }, []);
 
-  // Auto-rotate quotes every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       let newIndex;
@@ -59,12 +74,19 @@ const About = () => {
       
       setCurrentQuote(KHALID_QUOTES[newIndex]);
       setQuoteIndex(newIndex);
-    }, 5000); // Change quote every 5 seconds
-
-    // Cleanup interval on component unmount
+    }, 5000);
     return () => clearInterval(interval);
-  }, [quoteIndex]); // Re-run when quoteIndex changes
+  }, [quoteIndex]);
 
+  useEffect(() => {
+    let interval;
+    if (isAutoPlaying) {
+      interval = setInterval(() => {
+        setActiveImage((prev) => (prev + 1) % heroImages.length);
+      }, 4000);
+    }
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, heroImages.length]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
@@ -86,62 +108,91 @@ const About = () => {
     }
   };
 
+   const handleInviteToSpeak = () => {
+    // Navigate to contact page with hash
+    navigate("/contact#contact-form");
+    
+    // Small delay to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        contactForm.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 300);
+  };
+
   const stats = [
     { number: "20+", label: "Years of Leadership", icon: FaChartLine },
     { number: "100+", label: "Global Keynotes", icon: FaGlobe },
     { number: "5", label: "Industry Sectors", icon: FaBuilding },
-    { number: "2", label: "Leadership Positions", icon: FaUsers }
+    { number: "3L+", label: "Students Mentored", icon: FaUsers }
   ];
 
   const achievements = [
-    { title: "40under40 Honoree", description: "Recognized as one of India's most influential young leaders", icon: FaTrophy },
-    { title: "Strategic Investor", description: "Invested in 10+ startups across emerging technologies", icon: FaRocket },
+    { title: "40 under 40 Honoree", description: "Recognized as one of India's most influential young leaders", icon: FaTrophy },
+    { title: "Strategic Investor", description: "Invested in 50+ startups across emerging technologies", icon: FaRocket },
     { title: "Global Mentor", description: "Mentored 3,00,000+ students across premier institutions", icon: FaGraduationCap },
     { title: "Capital Architect", description: "Steering ten-figure asset pool with strategic foresight", icon: FaLandmark }
   ];
 
   const socialLinks = [
-    { icon: FaLinkedinIn, url: "https://www.linkedin.com/in/khalidwani", label: "LinkedIn" },
-    { icon: FaInstagram, url: "https://www.instagram.com/khalidwani/", label: "Instagram" },
-    { icon: FaTwitter, url: "https://x.com/khalidwani", label: "Twitter" },
-    { icon: FaYoutube, url: "https://www.youtube.com/@wanikhalid", label: "YouTube" }
+    { icon: FaLinkedinIn, url: "https://www.linkedin.com/in/khalidwani", label: "LinkedIn", color: "#0077B5" },
+    { icon: FaInstagram, url: "https://www.instagram.com/khalidwani/", label: "Instagram", color: "#E4405F" },
+    { icon: FaTwitter, url: "https://x.com/khalidwani", label: "Twitter", color: "#1DA1F2" },
+    { icon: FaYoutube, url: "https://www.youtube.com/@wanikhalid", label: "YouTube", color: "#FF0000" }
   ];
 
   return (
     <div className="min-h-screen bg-[#06070a] overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 md:px-8 lg:px-16">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="grid lg:grid-cols-2 gap-12 items-center"
-          >
+      
+      {/* Hero Section with Dynamic Image Grid */}
+      <section className="relative pt-32 pb-20 px-4 md:px-8 lg:px-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[#B0E4CC]/5 blur-[120px] animate-pulse-slow" />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[100px] animate-pulse-slow animation-delay-1000" />
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_40%,rgba(176,228,204,0.02)_40%,rgba(176,228,204,0.02)_60%,transparent_60%)] bg-[size:80px_80px]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="space-y-6"
+            >
               <motion.div variants={fadeInUp}>
-                <p className="inline-flex items-center gap-3 text-[10px] lg:text-[11px] font-medium tracking-[0.28em] uppercase text-[#2EC8C0] mb-6 lg:mb-8">
-                  <span className="w-8 h-px bg-[#2EC8C0] inline-block" />
+                <p className="inline-flex items-center gap-3 text-[10px] lg:text-[11px] font-medium tracking-[0.28em] uppercase text-[#B0E4CC] mb-6 lg:mb-8">
+                  <span className="w-8 h-px bg-[#B0E4CC] inline-block" />
                   About Khalid Wani
                 </p>
                 <h1 
-                  className="font-cormorant font-light leading-none tracking-tight text-white"
-                  style={{
-                    fontSize: "clamp(48px, 8vw, 90px)",
-                    letterSpacing: "-0.02em",
-                  }}
+                  className="font-cormorant font-light leading-[1.1] tracking-tight text-white"
+                  style={{ fontSize: "clamp(42px, 7vw, 80px)" }}
                 >
                   Great leaders are
                   <br />
                   guided by a
                   <br />
-                  <em className="italic text-[#2EC8C0] not-italic">higher purpose.</em>
+                  <span className="text-[#B0E4CC] relative inline-block">
+                    higher purpose.
+                    <motion.div 
+                      className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#B0E4CC] to-transparent"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: 0.8, duration: 0.8 }}
+                    />
+                  </span>
                 </h1>
               </motion.div>
               
               <motion.div variants={fadeInUp} className="space-y-2 pt-4">
-                <p className="text-[#2EC8C0] font-cormorant text-2xl md:text-3xl font-light tracking-wide">
+                <p className="text-[#B0E4CC] font-cormorant text-2xl md:text-3xl font-light tracking-wide">
                   Shri Khalid Wani
                 </p>
                 <p className="text-gray-300 font-inter text-sm md:text-base tracking-wide">
@@ -151,71 +202,142 @@ const About = () => {
               </motion.div>
 
               <motion.div variants={fadeInUp}>
-                <blockquote className="border-l-2 border-[#2EC8C0] pl-6 py-2">
-                  <FaQuoteLeft className="text-[#2EC8C0] text-xl mb-2 opacity-50" />
+                <blockquote className="border-l-2 border-[#B0E4CC] pl-6 py-2">
+                  <FaQuoteLeft className="text-[#B0E4CC] text-xl mb-2 opacity-50" />
                   <p className="text-white font-inter text-base md:text-lg italic font-light leading-relaxed">
                     "True leadership is about vision, integrity, and empowering others to achieve greatness."
                   </p>
-                  <cite className="text-[#2EC8C0] font-inter text-xs tracking-wide mt-3 block">
+                  <cite className="text-[#B0E4CC] font-inter text-xs tracking-wide mt-3 block">
                     — Shri Khalid Wani
                   </cite>
                 </blockquote>
               </motion.div>
 
-              {/* Social Links - Desktop */}
-              <motion.div variants={fadeInUp} className="hidden md:flex items-center gap-6 pt-6">
+              {/* Social Links */}
+              <motion.div variants={fadeInUp} className="flex items-center gap-4 pt-6">
                 {socialLinks.map((social, index) => (
-                  <a
+                  <motion.a
                     key={index}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-[#2EC8C0] transition-colors duration-300"
+                    whileHover={{ scale: 1.1, y: -3 }}
+                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#B0E4CC] hover:border-[#B0E4CC]/50 transition-all duration-300"
                   >
-                    <social.icon className="text-lg" />
-                  </a>
+                    <social.icon className="text-base" />
+                  </motion.a>
                 ))}
               </motion.div>
-            </div>
+            </motion.div>
 
-            {/* Right Image - Circular Format */}
+            {/* Right Side - Dynamic Image Grid */}
             <motion.div
-              variants={fadeInUp}
-              className="relative flex justify-center items-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
             >
-              <div className="relative w-full max-w-2xl mx-auto group">
-                {/* Subtle Background Glow */}
-                <div className="absolute inset-0 rounded-full bg-[#2EC8C0]/5 blur-2xl scale-110 group-hover:scale-125 transition-transform duration-700"></div>
-
-                {/* Main Image Container */}
-                <div className="relative rounded-full overflow-hidden shadow-xl">
-                  <img
-                    src="profile2.jpg"
-                    alt="Shri Khalid Wani"
-                    className="w-full h-auto rounded-full object-cover aspect-square transform transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/800x800/2EC8C0/FFFFFF?text=Shri+Khalid+Wani";
-                    }}
-                  />
-
-                  {/* Elegant Overlay */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-[#06070a]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              {/* Main Featured Image with Slider */}
+              <div className="relative rounded-2xl overflow-hidden border-2 border-[#B0E4CC]/30 shadow-2xl group">
+                <div className="relative h-[450px] md:h-[550px]">
+                  {heroImages.map((image, index) => (
+                    <motion.div
+                      key={index}
+                      className="absolute inset-0"
+                      initial={{ opacity: 0, scale: 1.1 }}
+                      animate={{ 
+                        opacity: activeImage === index ? 1 : 0,
+                        scale: activeImage === index ? 1 : 1.1
+                      }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        onError={(e) => {
+                          e.target.src = image.fallback;
+                        }}
+                        className={`w-full h-full object-cover object-[center_9%] ${image.position}`}
+                      />
+                    </motion.div>
+                  ))}
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent" />
+                  
+                  {/* Slider Controls */}
+                  {/* <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                    {heroImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => { setActiveImage(index); setIsAutoPlaying(false); }}
+                        className={`transition-all duration-300 rounded-full ${
+                          activeImage === index ? 'w-8 h-1.5 bg-[#B0E4CC]' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/50'
+                        }`}
+                      />
+                    ))}
+                    <button
+                      onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                      className="ml-2 w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center hover:bg-[#B0E4CC]/20 transition-all duration-300"
+                    >
+                      {isAutoPlaying ? <FaPause className="text-white/70 text-[8px]" /> : <FaPlay className="text-white/70 text-[8px]" />}
+                    </button>
+                  </div> */}
                 </div>
 
-                {/* Minimalist Frame */}
-                <div className="absolute inset-0 rounded-full border border-[#2EC8C0]/30 pointer-events-none group-hover:border-[#2EC8C0]/60 transition-colors duration-300"></div>
-
-                {/* Subtle Accent */}
-                <div className="absolute -bottom-3 -right-3 w-24 h-24 rounded-full bg-[#2EC8C0]/5 blur-xl -z-10"></div>
+                {/* Floating Info Card */}
+                <div className="absolute bottom-0 left-4 right-1 bg-black/60 backdrop-blur-md rounded-xl p-3 border border-white/20">
+                  <div className="flex items-center justify-center gap-3">
+                    <div>
+                      <p className="text-[#B0E4CC] text-[10px] font-semibold uppercase tracking-wider">Global Leader & Mentor</p>
+                      <p className="text-white text-xs font-light">Transforming businesses & lives worldwide</p>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-[#B0E4CC]/20 flex items-center justify-center">
+                      <FaTrophy className="text-[#B0E4CC] text-sm" />
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Floating Small Images */}
+              <motion.div 
+                className="absolute -top-6 -right-6 w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden border-2 border-[#B0E4CC] shadow-xl rotate-12 hover:rotate-0 transition-all duration-500 cursor-pointer"
+                whileHover={{ scale: 1.05, rotate: 0 }}
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <img
+                  src={heroImages[1]?.src}
+                  alt="Khalid Wani"
+                  className="w-full h-full object-cover object-[center_50%]"
+                  onError={(e) => {
+                    e.target.src = heroImages[1]?.fallback;
+                  }}
+                />
+              </motion.div>
+
+              <motion.div 
+                className="absolute -bottom-6 -left-6 w-20 h-20 md:w-28 md:h-28 rounded-xl overflow-hidden border-2 border-[#B0E4CC] shadow-xl -rotate-12 hover:rotate-0 transition-all duration-500 cursor-pointer"
+                whileHover={{ scale: 1.05, rotate: 0 }}
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
+              >
+                <img
+                  src={heroImages[2]?.src}
+                  alt="Khalid Wani Speaking"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = heroImages[2]?.fallback;
+                  }}
+                />
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-16 bg-[#111111]">
+      {/* Stats Section with Animated Counters */}
+      <section className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-[#111111] to-[#06070a]">
         <div className="max-w-7xl mx-auto">
           <motion.div
             ref={ref}
@@ -228,14 +350,23 @@ const About = () => {
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="text-center group"
+                whileHover={{ y: -5 }}
+                className="text-center group relative"
               >
-                <stat.icon className="text-[#2EC8C0] text-3xl md:text-4xl mx-auto mb-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                <div className="text-[#2EC8C0] font-cormorant text-5xl md:text-6xl font-light mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-400 font-inter text-xs md:text-sm tracking-wide uppercase">
-                  {stat.label}
+                <div className="absolute inset-0 bg-[#B0E4CC]/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <stat.icon className="text-[#B0E4CC] text-3xl md:text-4xl mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                  <motion.div 
+                    className="text-[#B0E4CC] font-cormorant text-5xl md:text-6xl font-light mb-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    {stat.number}
+                  </motion.div>
+                  <div className="text-gray-400 font-inter text-xs md:text-sm tracking-wide uppercase">
+                    {stat.label}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -251,268 +382,126 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="grid lg:grid-cols-2 gap-16 items-start"
+            className="grid lg:grid-cols-2 gap-16 items-center"
           >
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-px bg-[#2EC8C0]" />
-                <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">The Journey</span>
+                <div className="w-8 h-px bg-[#B0E4CC]" />
+                <span className="text-[#B0E4CC] font-inter text-[10px] tracking-[0.2em] uppercase">The Journey</span>
               </div>
               <h2 className="text-white font-cormorant text-4xl md:text-5xl font-light leading-tight">
                 The Beginning of a
                 <br />
-                <span className="text-[#2EC8C0]">Greater Vision</span>
+                <span className="text-[#B0E4CC]">Greater Vision</span>
               </h2>
               <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                Shri Khalid Wani, born into a modest background, understood the value of hard work and vision from an early age. His journey wasn't always easy, but each challenge laid the foundation for the remarkable leader he is today. From navigating complex industries to shaping India's entrepreneurial landscape, his story is a testament to determination and vision.
+                Shri Khalid Wani, born into a modest background, understood the value of hard work and vision from an early age. His journey wasn't always easy, but each challenge laid the foundation for the remarkable leader he is today.
               </p>
               <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                His path was fueled by the desire to create a lasting impact, not just for himself, but for others who shared similar struggles. His leadership story started with small steps, but his vision reached far beyond what he could ever have imagined.
+                From navigating complex industries to shaping India's entrepreneurial landscape, his story is a testament to determination and vision. His path was fueled by the desire to create a lasting impact, not just for himself, but for others who shared similar struggles.
               </p>
             </div>
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-px bg-[#2EC8C0]" />
-                <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">Impact & Legacy</span>
+            
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#B0E4CC]/20 to-transparent rounded-2xl blur-2xl group-hover:blur-3xl transition-all duration-700" />
+              <div className="relative overflow-hidden rounded-2xl">
+                <img
+                  src="/khalidwani1.png"
+                  alt="Khalid Wani Journey"
+                  className="w-full h-[400px] object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.src = "/api/placeholder/800/800";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent" />
               </div>
-              <h2 className="text-white font-cormorant text-4xl md:text-5xl font-light leading-tight">
-                The Power of
-                <br />
-                <span className="text-[#2EC8C0]">Giving Back</span>
-              </h2>
-              <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                Shri Khalid Wani's life has been dedicated to more than just business success. His core belief is that giving back is the true essence of leadership. Just as early moments in his life shaped his resolve, he now uses his platform to guide others, transforming lives and industries globally.
-              </p>
-              <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                Shri Khalid believes in building sustainable solutions that address real-world issues, whether it's through strategic advice for companies or mentoring the next generation of leaders. He has built a career on ensuring that his success is not only for personal gain but for the betterment of society at large.
-              </p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Achievements Grid */}
-      {/* Achievements Grid */}
-      <section className="relative bg-[#111111] overflow-hidden">
-
-        {/* ── Full bleed background image ── */}
+      {/* Achievements Section */}
+      <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#06070a] via-[#06070a]/90 to-transparent z-10" />
           <img
             src="/wani2.JPG"
-            alt="Shri Khalid Wani"
-            className="w-full h-full object-cover"
-            style={{
-              objectPosition: "60% center",
-              filter: "brightness(0.55) contrast(1.1) saturate(0.85)",
+            alt="Khalid Wani Background"
+            className="w-full h-full object-cover object-center"
+            style={{ filter: "brightness(0.6)" }}
+            onError={(e) => {
+              e.target.style.display = "none";
             }}
-          />
-
-          {/* Heavy dark tint ONLY over left half — where text lives */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(10,10,10,0.93) 0%, rgba(10,10,10,0.90) 30%, rgba(10,10,10,0.70) 48%, rgba(10,10,10,0.10) 65%, transparent 100%)",
-            }}
-          />
-
-          {/* Top fade */}
-          <div
-            className="absolute inset-x-0 top-0 h-28"
-            style={{ background: "linear-gradient(to bottom, #111111, transparent)" }}
-          />
-          {/* Bottom fade */}
-          <div
-            className="absolute inset-x-0 bottom-0 h-28"
-            style={{ background: "linear-gradient(to top, #111111, transparent)" }}
           />
         </div>
 
-        {/* ── Main content ── */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-28">
-          <div className="flex flex-col lg:flex-row items-start gap-0">
-
-            {/* LEFT — text content over the pointing-hand side */}
-            <div className="w-full lg:w-[52%] lg:pr-12">
-
-              {/* Section label */}
+        <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div className="space-y-6">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-3 mb-6"
+                className="flex items-center gap-3"
               >
-                <div className="w-7 h-px bg-[#2EC8C0]" />
-                <p className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.24em] uppercase font-medium">
-                  Excellence Defined
-                </p>
+                <div className="w-8 h-px bg-[#B0E4CC]" />
+                <span className="text-[#B0E4CC] font-inter text-[10px] tracking-[0.2em] uppercase">Excellence Defined</span>
               </motion.div>
-
-              {/* Heading */}
+              
               <motion.h2
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.65, delay: 0.05 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="text-white font-cormorant font-light leading-none mb-6"
-                style={{ fontSize: "clamp(44px, 5vw, 68px)", letterSpacing: "-1.5px" }}
+                className="text-white font-cormorant text-4xl md:text-5xl font-light leading-tight"
               >
-                Strategic<br />
-                <span className="text-[#2EC8C0]">Excellence.</span>
+                Strategic
+                <br />
+                <span className="text-[#B0E4CC]">Excellence.</span>
               </motion.h2>
-
-              {/* Sub */}
+              
               <motion.p
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.65, delay: 0.1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="text-gray-400 font-inter text-sm font-light leading-relaxed mb-12 max-w-sm"
+                className="text-gray-300 font-inter text-sm font-light leading-relaxed"
               >
-                Board Member & Director at One Capital Ltd · Founder & Group
-                CEO of KWCG, bridging global capital with strategic foresight
-                across five industries.
+                Board Member & Director at One Capital Ltd · Founder & Group CEO of KWCG, 
+                bridging global capital with strategic foresight across five industries.
               </motion.p>
-
-              {/* ── Achievement rows — editorial list ── */}
-              <div className="space-y-0">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.55, delay: index * 0.1 + 0.15 }}
-                    viewport={{ once: true }}
-                    className="group flex items-start gap-5 py-5 border-b border-white/[0.07]
-                               hover:border-[#2EC8C0]/30 transition-colors duration-300 cursor-default"
-                  >
-                    {/* Index + icon */}
-                    <div className="flex-shrink-0 flex flex-col items-center gap-1.5 pt-0.5 w-9">
-                      <span
-                        className="font-cormorant font-light leading-none
-                                   text-[#2EC8C0]/35 group-hover:text-[#2EC8C0]/80
-                                   transition-colors duration-300"
-                        style={{ fontSize: "11px", letterSpacing: "0.1em" }}
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <div
-                        className="w-8 h-8 rounded-lg border border-[#2EC8C0]/20
-                                   flex items-center justify-center
-                                   group-hover:border-[#2EC8C0]/55
-                                   group-hover:bg-[#2EC8C0]/[0.08]
-                                   transition-all duration-300"
-                      >
-                        <achievement.icon
-                          className="text-[#2EC8C0] opacity-55
-                                     group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ fontSize: "13px" }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <h3
-                        className="text-white font-cormorant font-light tracking-wide
-                                   group-hover:text-[#2EC8C0] transition-colors duration-300
-                                   leading-tight mb-1"
-                        style={{ fontSize: "clamp(17px, 1.8vw, 21px)" }}
-                      >
-                        {achievement.title}
-                      </h3>
-                      <p className="text-gray-500 font-inter text-xs font-light leading-relaxed">
-                        {achievement.description}
-                      </p>
-                    </div>
-
-                    {/* Hover arrow */}
-                    <div
-                      className="flex-shrink-0 self-center text-[#2EC8C0]
-                                 opacity-0 group-hover:opacity-100
-                                 -translate-x-2 group-hover:translate-x-0
-                                 transition-all duration-300"
-                    >
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Bottom stats strip */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                viewport={{ once: true }}
-                className="mt-10 pt-8 border-t border-white/[0.07] grid grid-cols-3 gap-6"
-              >
-                {[
-                  { num: "20+", lbl: "Years Leading" },
-                  { num: "₹10B+", lbl: "Assets Managed" },
-                  { num: "5", lbl: "Industry Sectors" },
-                ].map((s, i) => (
-                  <div key={i} className="group cursor-default">
-                    <div
-                      className="font-cormorant font-light text-white leading-none mb-1
-                                 group-hover:text-[#2EC8C0] transition-colors duration-300"
-                      style={{
-                        fontSize: "clamp(26px, 2.8vw, 36px)",
-                        letterSpacing: "-1px",
-                      }}
-                    >
-                      {s.num}
-                    </div>
-                    <div className="text-gray-500 font-inter text-[9px] tracking-[0.15em] uppercase font-light">
-                      {s.lbl}
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
             </div>
 
-            {/* RIGHT — empty breathing space, face is here in bg image */}
-            <div className="hidden lg:block lg:w-[48%]" />
+            <div className="space-y-4">
+              {achievements.map((achievement, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ x: 10 }}
+                  className="group flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#B0E4CC]/30 transition-all duration-300"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-[#B0E4CC]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <achievement.icon className="text-[#B0E4CC] text-lg" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-cormorant text-lg font-light group-hover:text-[#B0E4CC] transition-colors">
+                      {achievement.title}
+                    </h3>
+                    <p className="text-gray-400 text-xs font-light">{achievement.description}</p>
+                  </div>
+                  <FaArrowRight className="text-[#B0E4CC] opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Quote — bottom right, floats near his face */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="absolute bottom-10 right-4 md:right-8 lg:right-16 z-10 max-w-[240px]"
-        >
-          <div
-            style={{
-              borderRight: "2px solid rgba(46,200,192,0.4)",
-              paddingRight: "16px",
-              textAlign: "right",
-            }}
-          >
-            <p className="text-white/55 font-cormorant text-sm font-light italic leading-relaxed">
-              "Vision without integrity<br />is just ambition."
-            </p>
-            <p className="text-[#2EC8C0] font-inter text-[9px] tracking-[0.2em] uppercase font-medium mt-2">
-              — Shri Khalid Wani
-            </p>
-          </div>
-        </motion.div>
-
       </section>
 
-      {/* Mentorship Section with Dynamic Quotes */}
+      {/* Mentorship Section */}
       <section className="py-24 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -524,87 +513,75 @@ const About = () => {
           >
             <div className="order-2 lg:order-1 space-y-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-px bg-[#2EC8C0]" />
-                <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">
-                  Mentorship & Impact
-                </span>
+                <div className="w-8 h-px bg-[#B0E4CC]" />
+                <span className="text-[#B0E4CC] font-inter text-[10px] tracking-[0.2em] uppercase">Mentorship & Impact</span>
               </div>
               <h2 className="text-white font-cormorant text-4xl md:text-5xl font-light leading-tight">
                 Inspiring Future Leaders.
                 <br />
-                <span className="text-[#2EC8C0]">Empowering Generations.</span>
+                <span className="text-[#B0E4CC]">Empowering Generations.</span>
               </h2>
               <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                Shri Khalid Wani believes that the true measure of leadership
-                lies in the leaders you help create. With over 300 sessions
-                delivered worldwide, spanning Ivy League universities, IITs,
-                IIMs, and state-level institutions, he has mentored more than
-                three lakh students in just the last four years.
+                Shri Khalid Wani believes that the true measure of leadership lies in the leaders you help create. 
+                With over 300 sessions delivered worldwide, spanning Ivy League universities, IITs, IIMs, 
+                and state-level institutions, he has mentored more than three lakh students.
               </p>
-              <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-                His sessions combine global business insights with practical,
-                on-ground strategies, helping students bridge the gap between
-                classroom learning and real-world application. Whether speaking
-                to first-year college students or aspiring founders, Shri Wani's
-                message remains constant: Think bigger, start sooner, and lead
-                with purpose.
-              </p>
+              <div className="flex items-center gap-2 pt-4">
+                <div className="w-12 h-12 rounded-full bg-[#B0E4CC]/10 flex items-center justify-center">
+                  <FaUsers className="text-[#B0E4CC] text-xl" />
+                </div>
+                <div>
+                  <p className="text-[#B0E4CC] text-sm font-semibold">3,00,000+ Students Mentored</p>
+                  <p className="text-gray-500 text-xs">Across 100+ Institutions</p>
+                </div>
+              </div>
             </div>
             
             {/* Dynamic Quote Section */}
             <div className="order-1 lg:order-2">
-              <div className="bg-[#111111] rounded-2xl p-8 border border-[#2EC8C0]/10 relative group">
-                <FaQuoteLeft className="text-[#2EC8C0] text-2xl mb-4 opacity-50" />
-                
-                {/* Animated Quote Text */}
-                <motion.p 
-                  key={currentQuote}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-white font-inter text-lg italic font-light leading-relaxed min-h-[100px]"
-                >
-                  "{currentQuote}"
-                </motion.p>
-                
-                <div className="mt-6 pt-4 border-t border-[#2EC8C0]/10 flex items-center justify-between">
-                  <p className="text-[#2EC8C0] font-cormorant text-sm tracking-wide">
-                    - Khalid Wani
-                  </p>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#B0E4CC]/20 to-transparent rounded-2xl blur-2xl group-hover:blur-3xl transition-all duration-700" />
+                <div className="relative bg-gradient-to-br from-[#111111] to-[#06070a] rounded-2xl p-8 border border-[#B0E4CC]/20 overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#B0E4CC]/5 rounded-full blur-3xl" />
+                  <FaQuoteLeft className="text-[#B0E4CC] text-3xl mb-6 opacity-30" />
                   
-                  {/* Refresh Button */}
+                  <motion.p 
+                    key={currentQuote}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.4 }}
+                    className="text-white font-inter text-lg italic font-light leading-relaxed min-h-[120px]"
+                  >
+                    "{currentQuote}"
+                  </motion.p>
                   
+                  <div className="mt-6 pt-4 border-t border-[#B0E4CC]/10 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden border border-[#B0E4CC]">
+                        <img
+                          src="/khalidwani1.png"
+                          alt="Khalid Wani"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = "/api/placeholder/40/40";
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <p className="text-[#B0E4CC] font-cormorant text-sm font-light">Khalid Wani</p>
+                        <p className="text-gray-500 text-[9px] uppercase tracking-wider">Global Mentor</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="w-1 h-1 rounded-full bg-[#B0E4CC]/30" />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* A Life Focused on Purpose */}
-      <section className="py-24 px-4 md:px-8 lg:px-16 bg-[#111111]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto text-center space-y-8"
-          >
-            <div className="w-12 h-px bg-[#2EC8C0] mx-auto" />
-            <h2 className="text-white font-cormorant text-4xl md:text-5xl font-light">
-              A Life Focused on Purpose
-            </h2>
-            <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-              Shri Khalid Wani's work is deeply intertwined with his mission to create lasting change. His work with global startups, multinational companies, and government institutions reflects his drive to make the world a better place.
-            </p>
-            <p className="text-gray-300 font-inter text-base leading-relaxed font-light">
-              He believes in the power of education and mentorship. Over the years, he has forged strategic partnerships with leading educational institutions, playing a pivotal role in shaping the next wave of entrepreneurial talent. Whether it's addressing industry issues or guiding policy development, his life remains devoted to serving others.
-            </p>
-            <p className="text-white font-inter text-base leading-relaxed font-light border-l-2 border-[#2EC8C0] pl-6 mx-auto max-w-2xl">
-              Through his contributions, Shri Khalid Wani stands as a symbol of leadership that does not rest until it has made a positive difference in the lives of others.
-            </p>
           </motion.div>
         </div>
       </section>
@@ -616,40 +593,55 @@ const About = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto bg-gradient-to-r from-[#2EC8C0]/5 to-[#06070a] border border-[#2EC8C0]/20 rounded-2xl p-8 md:p-12 text-center"
+          className="max-w-5xl mx-auto bg-gradient-to-r from-[#B0E4CC]/10 to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden group"
         >
-          <FaEnvelope className="text-[#2EC8C0] text-4xl mx-auto mb-6 opacity-70" />
-          <h2 className="text-white font-cormorant text-4xl md:text-5xl font-light mb-4">
-            Connect with Shri Khalid Wani
-          </h2>
-          <p className="text-gray-400 font-inter text-sm mb-8 max-w-2xl mx-auto font-light tracking-wide">
-            For speaking engagements, mentorship opportunities, or strategic collaborations
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="mailto:Info@khalidwani.com"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#2EC8C0] text-[#06070a] font-inter text-[10px] font-medium tracking-[0.2em] uppercase rounded hover:bg-[#2EC8C0]/90 transition-all duration-300 transform hover:scale-105"
-            >
-              <FaEnvelope className="text-sm" />
-              Email: Info@khalidwani.com
-            </a>
-            <a
-              href="https://www.khalidwani.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-[#2EC8C0]/40 text-[#2EC8C0] font-inter text-[10px] font-medium tracking-[0.2em] uppercase rounded hover:border-[#2EC8C0] hover:bg-[#2EC8C0]/5 transition-all duration-300"
-            >
-              <FaExternalLinkAlt className="text-sm" />
-              Visit Website
-            </a>
-          </div>
-          <div className="mt-8 pt-6 border-t border-[#2EC8C0]/10">
-            <p className="text-gray-500 font-inter text-xs tracking-wide">
-              Multi-Sector Focus: Mobility • Finance • Emerging Tech • Culture
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B0E4CC]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+          
+          <div className="relative z-10">
+            <div className="w-16 h-16 rounded-full bg-[#B0E4CC]/10 flex items-center justify-center mx-auto mb-6">
+              <FaEnvelope className="text-[#B0E4CC] text-2xl" />
+            </div>
+            
+            <h2 className="text-white font-cormorant text-3xl md:text-4xl font-light mb-4">
+              Connect with Shri Khalid Wani
+            </h2>
+            
+            <p className="text-gray-400 text-sm mb-8 max-w-2xl mx-auto font-light">
+              For speaking engagements, mentorship opportunities, or strategic collaborations
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="mailto:Info@khalidwani.com"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#B0E4CC] text-[#06070a] text-[10px] font-medium tracking-[0.2em] uppercase rounded-lg hover:bg-[#B0E4CC]/90 transition-all duration-300 hover:-translate-y-1"
+              >
+                <FaEnvelope className="text-sm" />
+                Email: Info@khalidwani.com
+              </a>
+              <button
+   onClick={handleInviteToSpeak}
+  className="group inline-flex items-center justify-center gap-2 px-8 py-3 border border-[#B0E4CC]/40 text-[#B0E4CC] text-[10px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#B0E4CC] hover:bg-[#B0E4CC]/5 transition-all duration-300 hover:-translate-y-1"
+>
+  <FaExternalLinkAlt className="text-sm" />
+  Contact
+</button>
+            </div>
           </div>
         </motion.div>
       </section>
+
+      <style jsx>{`
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 4s ease-in-out infinite;
+        }
+        .animation-delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
     </div>
   );
 };

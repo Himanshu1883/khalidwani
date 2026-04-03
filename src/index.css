@@ -14,6 +14,8 @@
   --cream: #f4efe5;
   --muted: #727268;
   --muted-light: #9a9a90;
+  --teal: #B0E4CC;
+  --teal-light: #9AD4BC;
 }
 
 * {
@@ -31,7 +33,6 @@ body {
   background: var(--ink);
   color: var(--cream);
   overflow-x: hidden;
-  cursor: none;
 }
 
 a {
@@ -42,7 +43,7 @@ a {
   position: fixed;
   width: 8px;
   height: 8px;
-  background: var(--gold);
+  background: var(--teal);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -50,7 +51,7 @@ a {
   transition: transform 0.15s ease, background 0.2s ease;
 }
 
-.cursor-ring {
+/* .cursor-ring {
   position: fixed;
   width: 34px;
   height: 34px;
@@ -68,7 +69,7 @@ a {
 
 .cursor-ring.hidden {
   opacity: 0;
-}
+} */
 
 .img-grain::after {
   content: '';
@@ -130,7 +131,7 @@ a {
 
 .bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  background: linear-gradient(90deg, var(--teal), var(--teal-light));
   width: 0;
   transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -345,7 +346,7 @@ a {
 }
 
 .hero-primary-button {
-  background: linear-gradient(135deg, #f2d57c 0%, #c9a84c 100%);
+  background: var(--teal);
   color: #09111d;
   box-shadow: 0 22px 60px rgba(201, 168, 76, 0.26);
 }
@@ -530,7 +531,7 @@ a {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.2rem;
   line-height: 1;
-  color: #f4d98d;
+  color: var(--teal);
 }
 
 .hero-side-note {
@@ -666,8 +667,6 @@ a {
   }
 }
 
-
-
 /* Add to your global CSS file (e.g., index.css or App.css) */
 
 /* KHAD Font - You'll need to import or define this */
@@ -731,12 +730,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2EC8C0;
+  background: var(--teal);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2EC8C0/80;
+  background: var(--teal-light);
 }
 
 /* Animation classes */
@@ -780,7 +779,7 @@ html {
 
 /* Custom cursor (optional) */
 .custom-cursor {
-  cursor: none;
+  cursor: auto;
 }
 
 /* Reveal animations */
@@ -793,4 +792,345 @@ html {
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Add this to your global CSS file (e.g., index.css or App.css) */
+
+/* Extra small breakpoint for better mobile handling */
+@layer utilities {
+  @media (min-width: 480px) {
+    .xs\:block {
+      display: block;
+    }
+    .xs\:hidden {
+      display: none;
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(4px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-1500 {
+  animation-delay: 1500ms;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2000ms;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3000ms;
+}
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px) rotate(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-50px) translateX(25px);
+    opacity: 0.6;
+  }
+  75% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes gridShift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 60px 60px;
+  }
+}
+
+@keyframes gradientX {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(176, 228, 204, 0.5);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes scrollIndicator {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-float-in-right {
+  animation: floatInRight 0.8s ease-out forwards;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 10s ease infinite;
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-grid-shift {
+  animation: gridShift 20s linear infinite;
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradientX 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2s ease-in-out infinite;
+}
+
+.animate-scroll-indicator {
+  animation: scrollIndicator 1.5s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.animation-delay-800 {
+  animation-delay: 800ms;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* Hover effects */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:rotate-2:hover {
+  transform: rotate(2deg);
+}
+
+/* Smooth transitions */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clip-hexagon {
+  clip-path: polygon(
+    25% 6.7%, 75% 6.7%,
+    100% 50%, 75% 93.3%,
+    25% 93.3%, 0% 50%
+  );
 }

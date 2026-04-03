@@ -1,4 +1,7 @@
 import About from "../components/About";
+import BrandPartners from "../components/BrandPartner";
+import UltimateCollaboration from "../components/Collaborations";
+import ConsultedFor from "../components/Constulted";
 import CTA from "../components/CTA";
 import Hero from "../components/Hero";
 import Marquee from "../components/Marquee";
@@ -17,10 +20,13 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <Stats />
-      <Marquee />
+      {/* <Stats /> */}
       <About />
+       <Marquee />
       <Services />
+      <ConsultedFor/>
+      <UltimateCollaboration/>
+       <BrandPartners />
       <QuoteBreak />
       <Portrait />
       <Talks />
@@ -30,3 +36,4 @@ export default function Home() {
     </main>
   );
 }
+// bg-[#B0E4CC] 

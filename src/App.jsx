@@ -8,8 +8,10 @@ import About from "./pages/about";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
+import useScrollToTop from './hooks/useScrollToTop';
 
 export default function App() {
+  useScrollToTop();
   return (
     <>
       <Cursor />

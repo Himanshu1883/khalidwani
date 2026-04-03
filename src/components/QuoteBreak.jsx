@@ -51,7 +51,7 @@ export default function QuoteBreak() {
           className="font-cormorant font-light italic leading-[1.35] text-cream max-w-[700px]"
           style={{
             fontSize: "clamp(26px, 3.2vw, 50px)",
-            borderLeft: "2px solid var(--gold)",
+            borderLeft: "2px solid var(--[#B0E4CC])",
             paddingLeft: "40px",
           }}
         >
@@ -59,7 +59,7 @@ export default function QuoteBreak() {
           thinking with practical execution, and fostering growth while
           maintaining integrity.
           <cite
-            className="block mt-7 font-dm font-medium not-italic text-gold"
+            className="block mt-7 font-dm font-medium not-italic text-[#B0E4CC]"
             style={{ fontSize: "10px", letterSpacing: "0.22em" }}
           >
             — KHALID WANI, FOUNDER KWCG

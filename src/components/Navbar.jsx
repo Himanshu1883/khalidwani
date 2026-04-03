@@ -3,138 +3,166 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { NAV_LINKS } from "../data/content";
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScroll, setLastScroll] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const handleScroll = () => {
+      const current = window.scrollY;
 
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+      if (current > lastScroll && current > 80) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+      }
+
+      setLastScroll(current);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScroll]);
 
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const navItemClass = ({ isActive }) =>
-    [
-      "relative rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] transition-all duration-300",
-      isActive
-        ? "bg-[#f4efe5] text-[#08101d] shadow-[0_10px_24px_rgba(244,239,229,0.18)]"
-        : "text-white/72 hover:bg-white/8 hover:text-white",
-    ].join(" ");
+  // Function to handle Connect button click
+  const handleConnectClick = (e) => {
+    if (location.pathname === "/contact") {
+      e.preventDefault();
+      // If already on contact page, scroll to the contact form
+      const contactForm = document.getElementById('contact-form') || document.querySelector('.bg-gradient-to-br.from-\\[\\#111111\\]');
+      if (contactForm) {
+        contactForm.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start'
+        });
+      }
+    }
+    // If not on contact page, let the Link handle navigation normally
+  };
+
+  // Function to scroll to contact form after navigation
+  useEffect(() => {
+    if (location.pathname === "/contact") {
+      const timer = setTimeout(() => {
+        const hash = window.location.hash;
+        if (hash === '#contact-form') {
+          const contactForm = document.getElementById('contact-form') || document.querySelector('.bg-gradient-to-br.from-\\[\\#111111\\]');
+          if (contactForm) {
+            contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname]);
+
+  // Close mobile menu when clicking a link
+  const handleMobileLinkClick = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6 lg:px-8">
-        <div
-          className={[
-            "flex w-full items-center justify-between rounded-[28px] px-4 py-3 transition-all duration-300 md:px-6",
-            scrolled
-              ? "border-white/12 bg-[#07111f]/88 shadow-[0_18px_60px_rgba(0,0,0,0.38)] backdrop-blur-2xl"
-              : "border-white/8 bg-[#07111f]/58 backdrop-blur-xl",
-          ].join(" ")}
-        >
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-              <img
-                src="/KW_LOGO_D.png"
-                alt="Khalid Wani"
-                className="h-7 w-auto object-contain"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <p className="font-cormorant text-2xl leading-none text-white">
-                Khalid <span className="text-gold">Wani</span>
-              </p>
-              <p className="mt-1 text-[9px] uppercase tracking-[0.32em] text-white/45">
-                Strategy / Leadership / Growth
-              </p>
-            </div>
+      {/* ================= NAVBAR ================= */}
+      <nav
+        className={`fixed inset-x-0 z-50 flex justify-center transition-all duration-500 ${
+          visible ? "top-6 opacity-100" : "-top-24 opacity-0"
+        }`}
+      >
+        <div className="w-[95%] max-w-[1200px] flex items-center justify-between px-6 py-3 rounded-2xl border border-white/10 bg-[#0B1220]/80 backdrop-blur-xl shadow-xl">
+
+          {/* LOGO */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src="/KW_LOGO_D.png" className="h-8 transition-transform duration-300 group-hover:scale-105" alt="Logo" />
+            <span className="hidden sm:block text-white font-medium group-hover:text-[#B0E4CC] transition-colors duration-300">
+              Khalid <span className="text-[#B0E4CC] group-hover:text-white transition-colors duration-300">Wani</span>
+            </span>
           </Link>
 
-          <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 p-2 lg:flex">
-            {NAV_LINKS.map((link) => (
+          {/* LINKS RIGHT - Desktop */}
+          <div className="hidden lg:flex items-center gap-8 ml-auto mr-6">
+            {NAV_LINKS.map((link, i) => (
               <NavLink
-                key={link.to}
+                key={i}
                 to={link.to}
                 end={link.to === "/"}
-                className={navItemClass}
+                className={({ isActive }) =>
+                  `relative text-[12px] uppercase tracking-widest font-medium transition-all duration-300 ${
+                    isActive
+                      ? "text-white"
+                      : "text-white/60 hover:text-white"
+                  }`
+                }
               >
-                {link.label}
+                {({ isActive }) => (
+                  <>
+                    {link.label}
+                    <span
+                      className={`absolute left-0 -bottom-1 h-[1.5px] w-full bg-[#B0E4CC] transition-all duration-300 ${
+                        isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                      }`}
+                    />
+                  </>
+                )}
               </NavLink>
             ))}
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              to="/contact"
-              className="inline-flex h-11 items-center justify-center rounded-full bg-gold px-6 text-[10px] font-bold uppercase tracking-[0.28em] text-[#07111f] transition duration-300 hover:-translate-y-0.5 hover:bg-gold-light"
-            >
-              Connect Now
-            </Link>
-          </div>
+          {/* CTA Button - Connect Desktop */}
+          <Link
+            to="/contact#contact-form"
+            onClick={handleConnectClick}
+            className="hidden lg:flex items-center px-5 py-2 rounded-full bg-[#B0E4CC] text-black text-xs font-semibold uppercase tracking-widest hover:bg-[#9AD4BC] hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[#B0E4CC]/50"
+          >
+            Connect
+          </Link>
 
+          {/* MOBILE MENU BUTTON */}
           <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/5 text-white transition hover:bg-white/10 lg:hidden"
-            aria-label="Toggle navigation menu"
-            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="lg:hidden h-10 w-10 flex items-center justify-center border border-white/20 rounded-lg hover:bg-white/10 transition-all duration-300 active:scale-95"
+            aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-1.5">
-              <span
-                className={`block h-0.5 w-5 origin-center rounded-full bg-current transition ${
-                  menuOpen ? "translate-y-2 rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-5 rounded-full bg-current transition ${
-                  menuOpen ? "opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-5 origin-center rounded-full bg-current transition ${
-                  menuOpen ? "-translate-y-2 -rotate-45" : ""
-                }`}
-              />
+              <span className={`h-0.5 w-5 bg-white transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`h-0.5 w-5 bg-white transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`h-0.5 w-5 bg-white transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
             </div>
           </button>
         </div>
       </nav>
 
+      {/* MOBILE MENU OVERLAY */}
       <div
-        className={`fixed inset-0 z-40 bg-[#020814]/70 backdrop-blur-md transition duration-300 lg:hidden ${
-          menuOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
+        className={`fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-all duration-300 ${
+          menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setMenuOpen(false)}
       />
 
+      {/* MOBILE MENU DRAWER */}
       <div
-        className={`fixed inset-x-4 top-[88px] z-50 rounded-[28px] border border-white/10 bg-[#07111f]/96 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition duration-300 lg:hidden ${
+        className={`fixed top-24 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 bg-[#0B1220] border border-white/10 rounded-xl p-6 transition-all duration-300 ${
           menuOpen
-            ? "translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-4 opacity-0"
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-5 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col gap-2">
-          {NAV_LINKS.map((link) => (
+        <div className="flex flex-col gap-4">
+          {NAV_LINKS.map((link, i) => (
             <NavLink
-              key={link.to}
+              key={i}
               to={link.to}
-              end={link.to === "/"}
+              onClick={handleMobileLinkClick}
               className={({ isActive }) =>
-                [
-                  "rounded-2xl px-4 py-4 text-sm font-semibold uppercase tracking-[0.22em] transition",
-                  isActive
-                    ? "bg-gold text-[#07111f]"
-                    : "border border-white/8 bg-white/[0.03] text-white/78 hover:bg-white/[0.06] hover:text-white",
-                ].join(" ")
+                `text-center py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 uppercase tracking-widest text-sm ${
+                  isActive ? "text-[#B0E4CC] bg-white/5" : ""
+                }`
               }
             >
               {link.label}
@@ -143,10 +171,14 @@ export default function Navbar() {
         </div>
 
         <Link
-          to="/contact"
-          className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-2xl bg-white text-[11px] font-bold uppercase tracking-[0.24em] text-[#07111f] transition hover:bg-gold"
+          to="/contact#contact-form"
+          onClick={(e) => {
+            handleMobileLinkClick();
+            handleConnectClick(e);
+          }}
+          className="mt-5 flex justify-center py-3 rounded-full bg-[#B0E4CC] text-black text-xs font-semibold uppercase tracking-widest hover:bg-[#9AD4BC] hover:scale-105 transition-all duration-300 shadow-md"
         >
-          Book Appointment
+          Connect Now
         </Link>
       </div>
     </>

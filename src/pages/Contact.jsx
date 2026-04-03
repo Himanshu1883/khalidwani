@@ -1,6 +1,5 @@
-// contact.jsx
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   FaInstagram, 
   FaTwitter, 
@@ -11,15 +10,24 @@ import {
   FaGlobe,
   FaChartLine,
   FaUserTie,
-  FaCalendarAlt,
   FaRegClock,
   FaPaperPlane,
   FaCheckCircle,
-  FaExclamationCircle,
-  FaQuoteLeft
+  FaQuoteLeft,
+  FaStar,
+  FaArrowRight,
+  FaMicrophoneAlt,
+  FaChalkboardTeacher,
+  FaHandshake,
+  FaBuilding,
+  FaUsers,
+  FaAward,
+  FaPlay,
+  FaPause
 } from 'react-icons/fa';
+import { MdBusiness, MdStars, MdOutlineVideoCall, MdLocationOn } from 'react-icons/md';
 import { SiSubstack, SiCrunchbase } from 'react-icons/si';
-import { MdBusiness } from 'react-icons/md';
+import { IoSparkles } from 'react-icons/io5';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -38,512 +46,425 @@ const Contact = () => {
     success: false
   });
 
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+  const contactFormRef = useRef(null);
+
+  const heroImages = [
+    { src: "/quote1.jpg", alt: "Khalid Wani Speaking" },
+    { src: "/quote3.JPG", alt: "Khalid Wani Portrait" },
+    { src: "/khalidwani1.png", alt: "Khalid Wani Event" },
+    { src: "/quote2.jpg", alt: "Khalid Wani Mentoring" },
+  ];
+
+  // WhatsApp number (without + or spaces)
+  const WHATSAPP_NUMBER = "919910609060";
+  
+  // Email for speaking engagements
+  const SPEAKING_EMAIL = "speaking@khalidwani.com";
+
+  // Scroll to contact form when URL has #contact-form hash
+  useEffect(() => {
+    if (window.location.hash === '#contact-form') {
+      setTimeout(() => {
+        if (contactFormRef.current) {
+          contactFormRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 300);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (isAutoPlaying) {
+      interval = setInterval(() => {
+        setActiveSlide((prev) => (prev + 1) % heroImages.length);
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, heroImages.length]);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus({ ...formStatus, loading: true, error: null });
     
-    // Simulate form submission - Replace with your actual form handling
+    // Format message for WhatsApp
+    const inquiryTypeMap = {
+      general: 'General Inquiry',
+      speaking: 'Speaking Engagement',
+      mentorship: 'Mentorship Request',
+      media: 'Media Interview',
+      collaboration: 'Strategic Collaboration',
+      investment: 'Investment Opportunity'
+    };
+
+    const message = `*New Contact Form Submission from Khalid Wani Website*
+
+*━━━━━━━━━━━━━━━━━━━━*
+*📋 INQUIRY DETAILS*
+*━━━━━━━━━━━━━━━━━━━━*
+
+*👤 Name:* ${formData.name}
+*📧 Email:* ${formData.email}
+*📞 Phone:* ${formData.phone || 'Not provided'}
+*📌 Inquiry Type:* ${inquiryTypeMap[formData.eventType] || formData.eventType}
+*📝 Subject:* ${formData.subject || 'Not provided'}
+
+*━━━━━━━━━━━━━━━━━━━━*
+*💬 MESSAGE*
+*━━━━━━━━━━━━━━━━━━━━*
+
+${formData.message}
+
+*━━━━━━━━━━━━━━━━━━━━*
+*📅 Submitted:* ${new Date().toLocaleString()}
+*━━━━━━━━━━━━━━━━━━━━*`;
+
+    // Encode message for WhatsApp URL
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    
+    // Open WhatsApp in new tab
+    window.open(whatsappUrl, '_blank');
+    
+    // Simulate form submission success
     setTimeout(() => {
-      setFormStatus({
-        submitted: true,
-        loading: false,
-        success: true,
-        error: null
-      });
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        eventType: 'general'
-      });
-      
+      setFormStatus({ submitted: true, loading: false, success: true, error: null });
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '', eventType: 'general' });
       setTimeout(() => {
-        setFormStatus({
-          submitted: false,
-          loading: false,
-          success: false,
-          error: null
-        });
+        setFormStatus({ submitted: false, loading: false, success: false, error: null });
       }, 5000);
-    }, 1500);
+    }, 1000);
+  };
+
+  // Function to scroll to contact form
+  const scrollToContactForm = () => {
+    if (contactFormRef.current) {
+      contactFormRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
+  // Function to open Gmail with pre-filled speaking engagement email and scroll to form
+  const openSpeakingEmail = () => {
+    const subject = encodeURIComponent("Speaking Engagement Request - Khalid Wani");
+    const body = encodeURIComponent(`
+Dear Khalid Wani Team,
+
+I am interested in booking Khalid Wani for a speaking engagement at our event.
+
+Event Details:
+- Event Name: [Please add event name]
+- Event Date: [Please add date]
+- Expected Audience Size: [Please add size]
+- Location: [Please add location]
+- Theme/Topic: [Please add theme]
+
+Please let me know about availability and speaking fees.
+
+Looking forward to your response.
+
+Best regards,
+[Your Name]
+[Your Title]
+[Your Organization]
+[Your Phone Number]
+    `);
+    
+    window.location.href = `mailto:${SPEAKING_EMAIL}?subject=${subject}&body=${body}`;
+    
+    // Also scroll to contact form as backup
+    setTimeout(() => {
+      scrollToContactForm();
+    }, 100);
   };
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
   const staggerContainer = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } }
   };
 
   const socialLinks = [
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/khalidwani/',
-      icon: FaInstagram,
-      color: 'hover:text-[#E4405F]'
-    },
-    {
-      name: 'Twitter (X)',
-      url: 'https://x.com/khalidwani',
-      icon: FaTwitter,
-      color: 'hover:text-[#1DA1F2]'
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/khalidwani',
-      icon: FaLinkedin,
-      color: 'hover:text-[#0077B5]'
-    },
-    {
-      name: 'Facebook',
-      url: 'https://www.facebook.com/KhalidWaniofficial',
-      icon: FaFacebook,
-      color: 'hover:text-[#1877F2]'
-    },
-    {
-      name: 'Substack',
-      url: 'https://khalidwani.substack.com',
-      icon: SiSubstack,
-      color: 'hover:text-[#FF6719]'
-    },
-    {
-      name: 'Crunchbase',
-      url: 'https://www.crunchbase.com/person/khalid-wani',
-      icon: SiCrunchbase,
-      color: 'hover:text-[#0288D1]'
-    }
+    { name: 'Instagram', url: 'https://www.instagram.com/khalidwani/', icon: FaInstagram, color: '#E4405F' },
+    { name: 'Twitter', url: 'https://x.com/khalidwani', icon: FaTwitter, color: '#1DA1F2' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/khalidwani', icon: FaLinkedin, color: '#0077B5' },
+    { name: 'Facebook', url: 'https://www.facebook.com/KhalidWaniofficial', icon: FaFacebook, color: '#1877F2' },
+    { name: 'Substack', url: 'https://khalidwani.substack.com', icon: SiSubstack, color: '#FF6719' },
+    { name: 'Crunchbase', url: 'https://www.crunchbase.com/person/khalid-wani', icon: SiCrunchbase, color: '#0288D1' }
   ];
 
   const contactMethods = [
-    {
-      title: 'For Queries & Approvals',
-      contactPerson: 'Naina',
-      email: 'contact@khalidwani.com',
-      whatsapp: '+91 9910609060',
-      note: 'WhatsApp preferred (No calls)',
-      icon: FaEnvelope,
-      description: 'For media inquiries, event coordination, and approval requests'
-    },
-    {
-      title: 'General Inquiries',
-      email: 'Info@khalidwani.com',
-      website: 'www.khalidwani.com',
-      icon: FaGlobe,
-      description: 'For speaking engagements, mentorship, and strategic collaborations'
-    }
-  ];
-
-  const organizations = [
-    {
-      name: 'KWCG',
-      description: 'Strategy | Advisory | Business Intelligence | Marketing',
-      role: 'Founder & Group CEO',
-      icon: MdBusiness,
-      link: 'https://khalidwani.com'
-    },
-    {
-      name: 'One Capitall Ltd',
-      description: 'NBFC - Investment & Credit Solutions',
-      role: 'Board Member & Director',
-      icon: FaChartLine,
-      link: 'https://www.onecapitalllimited.com/'
-    }
-  ];
-
-  const eventGuidelines = [
-    'Must be addressed as "Shri Khalid Wani" in all official materials',
-    'Social media handles must be tagged in all event-related posts',
-    'All creatives and press releases require approval before publication',
-    'Media interviews must be routed through the team',
-    'Questions for interviews should be shared in advance for approval'
+    { title: 'Speaking Engagements', person: 'Naina', email: 'speaking@khalidwani.com', whatsapp: '+91 9910609060', icon: FaMicrophoneAlt, desc: 'Book for keynotes & corporate events' },
+    { title: 'Media & Press', email: 'media@khalidwani.com', icon: FaQuoteLeft, desc: 'Interviews & press collaborations' },
+    { title: 'Strategic Partnerships', email: 'partners@khalidwani.com', icon: FaHandshake, desc: 'Collaboration & investment opportunities' },
+    { title: 'Mentorship', email: 'mentor@khalidwani.com', whatsapp: '+91 9910609060', icon: FaChalkboardTeacher, desc: '1-on-1 mentorship for leaders' }
   ];
 
   return (
     <div className="min-h-screen bg-[#06070a] overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 md:px-8 lg:px-16">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <p className="inline-flex items-center gap-3 text-[10px] lg:text-[11px] font-medium tracking-[0.28em] uppercase text-[#2EC8C0] mb-6">
-              <span className="w-8 h-px bg-[#2EC8C0] inline-block" />
-              Get in Touch
-              <span className="w-8 h-px bg-[#2EC8C0] inline-block" />
-            </p>
-            <h1 
-              className="font-cormorant font-light leading-tight text-white"
-              style={{
-                fontSize: "clamp(48px, 8vw, 80px)",
-                letterSpacing: "-0.02em",
-              }}
+      
+      {/* Hero Section with Image Slider and Video Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Slider */}
+        <div className="absolute inset-0 z-0">
+          {heroImages.map((image, index) => (
+            <motion.div
+              key={index}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: activeSlide === index ? 1 : 0, scale: activeSlide === index ? 1 : 1.1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
             >
-              Let's Create
-              <br />
-              <span className="text-[#2EC8C0]">Impact Together</span>
+              <img src={image.src} alt={image.alt} className="w-full h-full object-cover object-[center_20%]" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#06070a]/50 via-[#06070a]/60 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent pointer-events-none" />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Slider Controls */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => { setActiveSlide(index); setIsAutoPlaying(false); }}
+              className={`transition-all duration-300 rounded-full ${activeSlide === index ? 'w-12 h-2 bg-[#B0E4CC]' : 'w-2 h-2 bg-white/30'}`}
+            />
+          ))}
+          <button onClick={() => setIsAutoPlaying(!isAutoPlaying)} className="ml-4 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-[#B0E4CC]/20">
+            {isAutoPlaying ? <FaPause className="text-white/70 text-xs" /> : <FaPlay className="text-white/70 text-xs" />}
+          </button>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 lg:px-16 text-center">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <div className="inline-flex items-center gap-3 text-[10px] lg:text-[11px] font-medium tracking-[0.28em] uppercase text-[#B0E4CC] mb-6">
+              <span className="w-12 h-px bg-[#B0E4CC]" />
+              <span className="flex items-center gap-2"><MdStars className="animate-pulse" /> Connect With Khalid Wani <MdStars className="animate-pulse" /></span>
+              <span className="w-12 h-px bg-[#B0E4CC]" />
+            </div>
+            
+            <h1 className="font-cormorant font-light leading-[1.1] text-white" style={{ fontSize: "clamp(48px, 8vw, 90px)" }}>
+              Let's Create<br />
+              <span className="text-[#B0E4CC]">Impact Together</span>
             </h1>
-            <p className="text-gray-300 font-inter text-base leading-relaxed max-w-2xl mx-auto mt-6 font-light">
-              For speaking engagements, strategic collaborations, or media inquiries, 
-              our team is here to assist you.
+            
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mt-6 font-light">
+              For speaking engagements, strategic collaborations, or media inquiries, our team is here to assist you.
             </p>
           </motion.div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2" animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-scroll" />
+          </div>
+        </motion.div>
       </section>
 
       {/* Contact Methods Grid */}
-      <section className="py-12 px-4 md:px-8 lg:px-16">
+      <section className="py-24 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid md:grid-cols-2 gap-8"
-          >
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactMethods.map((method, index) => (
               <motion.div
                 key={index}
-                variants={fadeInUp}
-                className="group bg-gradient-to-br from-[#111111] to-[#06070a] border border-[#2EC8C0]/20 rounded-2xl p-8 hover:border-[#2EC8C0]/50 transition-all duration-500 hover:transform hover:-translate-y-2"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -10 }}
+                className="group bg-gradient-to-br from-[#111111] to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-6 hover:border-[#B0E4CC]/50 transition-all duration-500"
               >
-                <div className="w-14 h-14 rounded-full bg-[#2EC8C0]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <method.icon className="text-[#2EC8C0] text-2xl" />
+                <div className="w-12 h-12 rounded-full bg-[#B0E4CC]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <method.icon className="text-[#B0E4CC] text-xl" />
                 </div>
-                <h3 className="text-white font-cormorant text-2xl font-light mb-3 tracking-wide">
-                  {method.title}
-                </h3>
-                <p className="text-gray-400 font-inter text-sm mb-6 font-light">
-                  {method.description}
-                </p>
-                {method.contactPerson && (
-                  <p className="text-gray-300 font-inter text-sm mb-2">
-                    <span className="text-[#2EC8C0]">Contact:</span> {method.contactPerson}
-                  </p>
-                )}
-                <a 
-                  href={`mailto:${method.email}`}
-                  className="text-[#2EC8C0] font-inter text-sm hover:underline block mb-2 transition-all"
-                >
-                  <FaEnvelope className="inline mr-2" />
-                  {method.email}
-                </a>
-                {method.whatsapp && (
-                  <a 
-                    href={`https://wa.me/${method.whatsapp.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#2EC8C0] font-inter text-sm hover:underline block mb-2"
-                  >
-                    <FaWhatsapp className="inline mr-2" />
-                    {method.whatsapp}
-                  </a>
-                )}
-                {method.note && (
-                  <p className="text-gray-500 font-inter text-xs mt-3 flex items-center gap-1">
-                    <FaRegClock className="text-[#2EC8C0]" />
-                    {method.note}
-                  </p>
-                )}
-                {method.website && (
-                  <a 
-                    href={`https://${method.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#2EC8C0] font-inter text-sm hover:underline block"
-                  >
-                    <FaGlobe className="inline mr-2" />
-                    {method.website}
-                  </a>
-                )}
+                <h3 className="text-white font-cormorant text-xl font-light mb-2">{method.title}</h3>
+                <p className="text-gray-400 text-xs mb-4">{method.desc}</p>
+                {method.person && <p className="text-gray-300 text-xs"><span className="text-[#B0E4CC]">Contact:</span> {method.person}</p>}
+                <a href={`mailto:${method.email}`} className="text-[#B0E4CC] text-xs hover:underline block">{method.email}</a>
+                {method.whatsapp && <a href={`https://wa.me/${method.whatsapp.replace(/[^0-9]/g, '')}`} className="text-[#B0E4CC] text-xs hover:underline block">{method.whatsapp}</a>}
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Form and Social Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-16">
+      {/* Main Contact Form with Image Gallery - Added ID for scrolling */}
+      <section id="contact-form" ref={contactFormRef} className="py-12 px-4 md:px-8 lg:px-16 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-[#111111] border border-[#2EC8C0]/20 rounded-2xl p-8 hover:border-[#2EC8C0]/40 transition-all duration-500"
+              className="bg-gradient-to-br from-[#111111] to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-8 hover:border-[#B0E4CC]/40 transition-all duration-500"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-px bg-[#2EC8C0]" />
-                <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">
-                  Send a Message
-                </span>
+                <div className="w-8 h-px bg-[#B0E4CC]" />
+                <span className="text-[#B0E4CC] text-[10px] tracking-[0.2em] uppercase">Send a Message</span>
               </div>
-              <h3 className="text-white font-cormorant text-3xl font-light mb-6">
-                Let's Start a Conversation
-              </h3>
               
-              {formStatus.success && (
-                <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-3">
-                  <FaCheckCircle className="text-green-500 text-xl" />
-                  <p className="text-green-500 font-inter text-sm">Message sent successfully! We'll get back to you soon.</p>
-                </div>
-              )}
+              <h3 className="text-white font-cormorant text-3xl font-light mb-6">Let's Start a Conversation</h3>
               
-              {formStatus.error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3">
-                  <FaExclamationCircle className="text-red-500 text-xl" />
-                  <p className="text-red-500 font-inter text-sm">{formStatus.error}</p>
-                </div>
-              )}
+              <AnimatePresence>
+                {formStatus.success && (
+                  <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-3">
+                    <FaCheckCircle className="text-green-500 text-xl" />
+                    <p className="text-green-500 text-sm">Opening WhatsApp... Please send the message!</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               
               <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 hover:border-gray-600"
-                    placeholder="Your full name"
-                  />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-gray-300 text-sm block mb-2">Name *</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Your name" />
+                  </div>
+                  <div>
+                    <label className="text-gray-300 text-sm block mb-2">Email *</label>
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="your@email.com" />
+                  </div>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-gray-300 text-sm block mb-2">Phone *</label>
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Your phone number" />
+                  </div>
+                  <div>
+                    <label className="text-gray-300 text-sm block mb-2">Inquiry Type *</label>
+                    <select name="eventType" value={formData.eventType} onChange={handleChange} required className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors">
+                      <option value="general">General Inquiry</option>
+                      <option value="speaking">Speaking Engagement</option>
+                      <option value="mentorship">Mentorship Request</option>
+                      <option value="media">Media Interview</option>
+                      <option value="collaboration">Strategic Collaboration</option>
+                      <option value="investment">Investment Opportunity</option>
+                    </select>
+                  </div>
                 </div>
                 
                 <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 hover:border-gray-600"
-                    placeholder="your@email.com"
-                  />
+                  <label className="text-gray-300 text-sm block mb-2">Subject</label>
+                  <input type="text" name="subject" value={formData.subject} onChange={handleChange} className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors" placeholder="Brief subject" />
                 </div>
                 
                 <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 hover:border-gray-600"
-                    placeholder="+91 1234567890"
-                  />
+                  <label className="text-gray-300 text-sm block mb-2">Message *</label>
+                  <textarea name="message" value={formData.message} onChange={handleChange} required rows="4" className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#B0E4CC] transition-colors resize-none" placeholder="Tell us about your inquiry..." />
                 </div>
                 
-                <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Inquiry Type *
-                  </label>
-                  <select
-                    name="eventType"
-                    value={formData.eventType}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 cursor-pointer"
-                  >
-                    <option value="general">General Inquiry</option>
-                    <option value="speaking">Speaking Engagement</option>
-                    <option value="mentorship">Mentorship Request</option>
-                    <option value="media">Media Interview</option>
-                    <option value="collaboration">Strategic Collaboration</option>
-                    <option value="investment">Investment Opportunity</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 hover:border-gray-600"
-                    placeholder="Brief subject"
-                  />
-                </div>
-                
-                <div>
-                  <label className="text-gray-300 font-inter text-sm block mb-2 font-light">
-                    Message *
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows="5"
-                    className="w-full bg-[#06070a] border border-gray-700 rounded-lg px-4 py-3 text-white font-inter text-sm focus:outline-none focus:border-[#2EC8C0] transition-all duration-300 resize-none hover:border-gray-600"
-                    placeholder="Tell us about your inquiry..."
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={formStatus.loading}
-                  className="w-full bg-[#2EC8C0] text-[#06070a] font-inter text-[11px] font-medium tracking-[0.2em] uppercase py-3 rounded-lg hover:bg-[#2EC8C0]/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
+                <button type="submit" disabled={formStatus.loading} className="w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-[11px] font-medium tracking-[0.2em] uppercase py-3 rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
                   {formStatus.loading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-[#06070a] border-t-transparent rounded-full animate-spin"></div>
-                      Sending...
-                    </>
+                    <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Processing...</>
                   ) : (
-                    <>
-                      <FaPaperPlane className="text-sm" />
-                      Send Message
-                    </>
+                    <><FaWhatsapp className="text-base" /> Send via WhatsApp</>
                   )}
                 </button>
               </form>
+              
+              <p className="text-gray-500 text-[9px] text-center mt-4">
+                Your message will be sent directly to our WhatsApp. We'll respond within 24 hours.
+              </p>
             </motion.div>
 
-            {/* Social Links & Information */}
+            {/* Right Side - Image Gallery & Info */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="space-y-8"
+              className="space-y-6"
             >
-              {/* Social Links */}
-              <div className="bg-[#111111] border border-[#2EC8C0]/20 rounded-2xl p-8 hover:border-[#2EC8C0]/40 transition-all duration-500">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-px bg-[#2EC8C0]" />
-                  <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">
-                    Connect
-                  </span>
+              {/* Image Gallery Grid */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative h-48 rounded-2xl overflow-hidden border border-[#B0E4CC]/20 group">
+                  <img src="/khalidwani1.png" alt="Khalid" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </div>
-                <h3 className="text-white font-cormorant text-2xl font-light mb-6">
-                  Follow on Social Media
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {socialLinks.map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-3 p-3 bg-[#06070a] rounded-lg hover:bg-[#2EC8C0]/5 transition-all duration-300 border border-transparent hover:border-[#2EC8C0]/30"
-                    >
-                      <social.icon className={`text-gray-400 text-lg group-hover:${social.color} transition-colors`} />
-                      <span className="text-gray-400 font-inter text-xs group-hover:text-[#2EC8C0] transition-colors">
-                        {social.name}
-                      </span>
-                    </a>
-                  ))}
+                <div className="relative h-48 rounded-2xl overflow-hidden border border-[#B0E4CC]/20 group">
+                  <img src="/khalidwani2.jpg" alt="Khalid" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                </div>
+                <div className="col-span-2 relative h-56 rounded-2xl overflow-hidden border border-[#B0E4CC]/20 group">
+                  <img src="/profile2.jpg" alt="Khalid" className="w-full h-full object-cover object-[center_20%] transition-transform group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 z-10">
+                    <p className="text-[#B0E4CC] text-xs font-semibold uppercase">Global Speaker & Mentor</p>
+                    <p className="text-white text-xs">Transforming businesses worldwide</p>
+                  </div>
                 </div>
               </div>
 
-              {/* Organizations */}
-              <div className="bg-[#111111] border border-[#2EC8C0]/20 rounded-2xl p-8 hover:border-[#2EC8C0]/40 transition-all duration-500">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-px bg-[#2EC8C0]" />
-                  <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">
-                    Leadership
-                  </span>
+              {/* Quick Response Card */}
+              <div className="bg-gradient-to-br from-[#111111] to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <MdOutlineVideoCall className="text-[#B0E4CC] text-2xl animate-pulse" />
+                  <h4 className="text-white font-semibold text-sm">Quick Response Guarantee</h4>
                 </div>
-                <h3 className="text-white font-cormorant text-2xl font-light mb-6">
-                  Associated Organizations
-                </h3>
-                <div className="space-y-6">
-                  {organizations.map((org, index) => (
-                    <div key={index} className="group">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-[#2EC8C0]/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                          <org.icon className="text-[#2EC8C0] text-lg" />
-                        </div>
-                        <div>
-                          <h4 className="text-white font-cormorant text-lg font-light mb-1">
-                            {org.name}
-                          </h4>
-                          <p className="text-[#2EC8C0] font-inter text-xs mb-2 tracking-wide">
-                            {org.role}
-                          </p>
-                          <p className="text-gray-400 font-inter text-xs leading-relaxed font-light">
-                            {org.description}
-                          </p>
-                        </div>
-                      </div>
-                      {index < organizations.length - 1 && (
-                        <div className="h-px bg-gradient-to-r from-[#2EC8C0]/20 to-transparent mt-6"></div>
-                      )}
-                    </div>
+                <p className="text-gray-400 text-xs leading-relaxed">Our team responds to all inquiries within 24-48 hours. For urgent matters, please use WhatsApp.</p>
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-4"><FaRegClock /> Response Time: 24-48 hours</div>
+              </div>
+
+              {/* Direct WhatsApp Contact */}
+              <div className="bg-gradient-to-br from-[#25D366]/10 to-[#128C7E]/5 border border-[#25D366]/30 rounded-2xl p-6 text-center">
+                <FaWhatsapp className="text-[#25D366] text-3xl mx-auto mb-3" />
+                <h4 className="text-white font-semibold text-sm mb-2">Direct WhatsApp Contact</h4>
+                <p className="text-gray-400 text-xs mb-3">For immediate assistance, message us directly</p>
+                <a 
+                  href="https://wa.me/919910609060" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white text-[10px] font-semibold uppercase tracking-wider rounded-lg hover:opacity-90 transition"
+                >
+                  <FaWhatsapp /> Chat Now
+                </a>
+              </div>
+
+              {/* Social Links */}
+              <div className="bg-gradient-to-br from-[#111111] to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-6">
+                <h3 className="text-white font-cormorant text-2xl font-light mb-4">Connect on Social Media</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {socialLinks.map((social, index) => (
+                    <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-[#06070a] rounded-lg hover:bg-[#B0E4CC]/5 transition border border-transparent hover:border-[#B0E4CC]/30 group">
+                      <social.icon className="text-gray-400 text-lg group-hover:text-[#B0E4CC] transition" />
+                      <span className="text-gray-400 text-xs group-hover:text-[#B0E4CC] transition">{social.name}</span>
+                    </a>
                   ))}
                 </div>
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Event Guidelines */}
-      <section className="py-20 px-4 md:px-8 lg:px-16">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-br from-[#2EC8C0]/5 to-transparent border border-[#2EC8C0]/20 rounded-2xl p-8 md:p-10"
-          >
-            <div className="flex items-center gap-3 mb-8">
-              <FaQuoteLeft className="text-[#2EC8C0] text-2xl opacity-50" />
-              <div className="w-12 h-px bg-[#2EC8C0]" />
-              <span className="text-[#2EC8C0] font-inter text-[10px] tracking-[0.2em] uppercase">
-                Professional Protocol
-              </span>
-            </div>
-            <h3 className="text-white font-cormorant text-3xl font-light mb-8">
-              Event & Media Guidelines
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              {eventGuidelines.map((guideline, index) => (
-                <div key={index} className="flex items-start gap-3 group">
-                  <div className="w-5 h-5 rounded-full bg-[#2EC8C0]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
-                    <FaCheckCircle className="text-[#2EC8C0] text-[10px]" />
-                  </div>
-                  <p className="text-gray-300 font-inter text-sm leading-relaxed font-light">
-                    {guideline}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -553,39 +474,37 @@ const Contact = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto bg-gradient-to-r from-[#2EC8C0]/5 to-[#06070a] border border-[#2EC8C0]/20 rounded-2xl p-8 md:p-12 text-center"
+          className="max-w-5xl mx-auto bg-gradient-to-r from-[#B0E4CC]/10 to-[#06070a] border border-[#B0E4CC]/20 rounded-2xl p-8 md:p-12 text-center"
         >
-          <div className="w-16 h-16 rounded-full bg-[#2EC8C0]/10 flex items-center justify-center mx-auto mb-6">
-            <FaUserTie className="text-[#2EC8C0] text-3xl" />
+          <div className="w-16 h-16 rounded-full bg-[#B0E4CC]/10 flex items-center justify-center mx-auto mb-6">
+            <FaUserTie className="text-[#B0E4CC] text-3xl" />
           </div>
-          <h2 className="text-white font-cormorant text-3xl md:text-4xl font-light mb-4">
-            Book Shri Khalid Wani for Your Event
-          </h2>
-          <p className="text-gray-400 font-inter text-sm mb-8 max-w-2xl mx-auto font-light leading-relaxed">
-            With over 100+ global keynotes and sessions delivered at prestigious institutions, 
-            bring world-class insights to your next event.
-          </p>
+          <h2 className="text-white font-cormorant text-3xl md:text-4xl font-light mb-4">Book Khalid Wani for Your Event</h2>
+          <p className="text-gray-400 text-sm mb-8">With 100+ global keynotes delivered at prestigious institutions, bring world-class insights to your next event.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="mailto:contact@khalidwani.com"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#2EC8C0] text-[#06070a] font-inter text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:bg-[#2EC8C0]/90 transition-all duration-300 transform hover:scale-105"
+            {/* Request Speaking Engagement - Opens Gmail AND scrolls to form */}
+            <button
+              onClick={openSpeakingEmail}
+              className="inline-flex items-center gap-2 px-8 py-3 bg-[#B0E4CC] text-[#06070a] text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:bg-[#B0E4CC]/90 transition hover:-translate-y-1"
             >
-              <FaEnvelope />
-              Request Speaking Engagement
-            </a>
-            <a
-              href="https://wa.me/919919069060"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-[#2EC8C0]/40 text-[#2EC8C0] font-inter text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#2EC8C0] hover:bg-[#2EC8C0]/5 transition-all duration-300"
+              <FaEnvelope /> Request Speaking Engagement
+            </button>
+            
+            {/* WhatsApp Inquiry - Scrolls to form */}
+            <button
+              onClick={scrollToContactForm}
+              className="inline-flex items-center gap-2 px-8 py-3 border border-[#B0E4CC]/40 text-[#B0E4CC] text-[11px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#B0E4CC] hover:bg-[#B0E4CC]/5 transition hover:-translate-y-1"
             >
-              <FaWhatsapp />
-              WhatsApp Inquiry
-            </a>
+              <FaWhatsapp /> WhatsApp Inquiry
+            </button>
           </div>
         </motion.div>
       </section>
+
+      <style jsx>{`
+        @keyframes scroll { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(8px); opacity: 1; } }
+        .animate-scroll { animation: scroll 1.5s ease-in-out infinite; }
+      `}</style>
     </div>
   );
 };
