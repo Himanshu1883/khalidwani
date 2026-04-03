@@ -4,11 +4,12 @@ import Cursor from "./components/Cursor";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 
-import About from "./pages/about";
+
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import useScrollToTop from './hooks/useScrollToTop';
+import About from "./components/About";
 
 export default function App() {
   useScrollToTop();
