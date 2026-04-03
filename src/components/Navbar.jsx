@@ -96,7 +96,7 @@ export default function Navbar() {
                     isActive
                       ? "text-white"
                       : "text-white/60 hover:text-white"
-                  }`
+                  }` 
                 }
               >
                 {({ isActive }) => (
