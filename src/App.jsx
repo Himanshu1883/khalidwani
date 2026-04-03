@@ -9,7 +9,7 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import useScrollToTop from './hooks/useScrollToTop';
-import About from "./components/About";
+import About from "./pages/About";
 
 export default function App() {
   useScrollToTop();

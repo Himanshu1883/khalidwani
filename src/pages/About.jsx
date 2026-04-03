@@ -107,22 +107,7 @@ const About = () => {
       }
     }
   };
-
-   const handleInviteToSpeak = () => {
-    // Navigate to contact page with hash
-    navigate("/contact#contact-form");
-    
-    // Small delay to ensure navigation completes before scrolling
-    setTimeout(() => {
-      const contactForm = document.getElementById('contact-form');
-      if (contactForm) {
-        contactForm.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }
-    }, 300);
-  };
+  
 
   const stats = [
     { number: "20+", label: "Years of Leadership", icon: FaChartLine },
@@ -257,7 +242,7 @@ const About = () => {
                         onError={(e) => {
                           e.target.src = image.fallback;
                         }}
-                        className={`w-full h-full object-cover object-[center_9%] ${image.position}`}
+                        className={`w-full h-full object-cover object-[center_30%] ${image.position}`}
                       />
                     </motion.div>
                   ))}
@@ -619,7 +604,7 @@ const About = () => {
                 Email: Info@khalidwani.com
               </a>
               <button
-   onClick={handleInviteToSpeak}
+  onClick={() => navigate('/contact#contact-form')}
   className="group inline-flex items-center justify-center gap-2 px-8 py-3 border border-[#B0E4CC]/40 text-[#B0E4CC] text-[10px] font-medium tracking-[0.2em] uppercase rounded-lg hover:border-[#B0E4CC] hover:bg-[#B0E4CC]/5 transition-all duration-300 hover:-translate-y-1"
 >
   <FaExternalLinkAlt className="text-sm" />
