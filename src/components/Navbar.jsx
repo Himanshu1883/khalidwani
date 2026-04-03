@@ -102,7 +102,7 @@ export default function Navbar() {
                 {({ isActive }) => ( 
                   <>
                     {link.label}
-                    <span
+                    <span 
                       className={`absolute left-0 -bottom-1 h-[1.5px] w-full bg-[#B0E4CC] transition-all duration-300 ${
                         isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                       }`}
